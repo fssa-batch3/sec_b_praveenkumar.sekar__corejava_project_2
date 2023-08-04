@@ -2,55 +2,10 @@
 
 ## Database Design
 
-- [ ] Create an ER diagram of the database
-- [ ] Write Create table scripts ![Crow's Foot Diagram](https://iili.io/HtJwOHN.png)
+- [ ] Create an ER diagram of the database ![Crow's Foot Diagram](https://iili.io/HtJwOHN.png)
+- [ ] Write Create table scripts [script](\src\main\resources\db\migration\V1__create_users)
 
 ----
-### Script for creating tables
-* CREATE TABLE users (
-  id INT NOT NULL AUTO_INCREMENT,
-  first_name VARCHAR(255) NOT NULL,
-  last_name VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL,
-  password VARCHAR(255) NOT NULL,
-  phone_no INT NOT NULL,
-  is_active BOOLEAN DEFAULT TRUE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id)
-);
-
-* CREATE TABLE categories (
-	 id INT NOT NULL AUTO_INCREMENT,
-     category_name VARCHAR(255) NOT NULL,
-     PRIMARY KEY (id)
-);
-
-* CREATE TABLE products (
-	id INT NOT NULL AUTO_INCREMENT,
-    product_name VARCHAR(255) NOT NULL,
-    description VARCHAR(255) NOT NULL,
-    category_id INT NOT NULL,
-    is_veg BOOLEAN DEFAULT TRUE,
-    is_active BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (id),
-    FOREIGN KEY (category_id) REFERENCES categories (id)
-);
-
-* CREATE TABLE product_prices (
-	id INT NOT NULL AUTO_INCREMENT,
-    product_id INT NOT NULL,
-    quantity INT NOT NULL DEFAULT 1,
-    type ENUM('kg', 'nos'),
-    start_date DATE NOT NULL,
-    end_date DATE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (id),
-    FOREIGN KEY (product_id) REFERENCES products(id)
-);
 
 ## Project Setup
 
