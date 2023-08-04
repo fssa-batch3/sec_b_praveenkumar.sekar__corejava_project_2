@@ -3,7 +3,7 @@
 ## Database Design
 
 - [ ] Create an ER diagram of the database ![Crow's Foot Diagram](https://iili.io/HtJwOHN.png)
-- [ ] Write Create table scripts [script](\src\main\resources\db\migration\V1__create_users)
+- [ ] Write Create table scripts [script](/src/main/resources/db/migration/V1__create_users.sql)
 
 ----
 
