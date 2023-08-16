@@ -61,7 +61,7 @@ public class ProductService {
 	    ResultSet rs = null;
 
 	    try {
-	        String query = "SELECT COUNT(*) FROM products WHERE id = ?";
+	        String query = "SELECT COUNT(*) FROM products WHERE id = ? AND is_active = ?";
 	        conn = ConnectionUtil.getConnection();
 	        stmt = conn.prepareStatement(query);
 	        stmt.setInt(1, productId);

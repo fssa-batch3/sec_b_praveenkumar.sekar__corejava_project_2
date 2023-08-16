@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,12 +13,12 @@ import org.junit.jupiter.api.Test;
 
 import in.fssa.homebakery.dto.ProductDetailDTO;
 import in.fssa.homebakery.exception.ValidationException;
-import in.fssa.homebakery.interface_files.ProductPricesInterface;
-import in.fssa.homebakery.model.Product;
 import in.fssa.homebakery.model.ProductPrice;
 import in.fssa.homebakery.service.ProductService;
 
 public class TestCreateProduct {
+	
+	Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis()); // Current timestamp
 
 	@Test
 	public void testCreateProductWithVailidInput() {
@@ -37,19 +38,19 @@ public class TestCreateProduct {
 		price1.setQuantity(1);
 		price1.setType(ProductPrice.QuantityType.KG);
 		price1.setPrice(10);
-		price1.setStartDate(LocalDate.now()); // Set the start date
+		price1.setStartDate(currentTimestamp); // Set the start date
 
 		ProductPrice price2 = new ProductPrice();
 		price2.setQuantity(2);
 		price2.setType(ProductPrice.QuantityType.KG);
 		price2.setPrice(20);
-		price2.setStartDate(LocalDate.now()); // Set the start date
+		price2.setStartDate(currentTimestamp); // Set the start date
 
 		ProductPrice price3 = new ProductPrice();
 		price3.setQuantity(3);
 		price3.setType(ProductPrice.QuantityType.KG);
 		price3.setPrice(30);
-		price3.setStartDate(LocalDate.now()); // Set the start date
+		price3.setStartDate(currentTimestamp); // Set the start date
 
 		priceList.add(price1);
 		priceList.add(price2);
@@ -96,19 +97,19 @@ public class TestCreateProduct {
 		price1.setQuantity(1);
 		price1.setType(ProductPrice.QuantityType.KG);
 		price1.setPrice(10);
-		price1.setStartDate(LocalDate.now()); // Set the start date
+		price1.setStartDate(currentTimestamp); // Set the start date
 
 		ProductPrice price2 = new ProductPrice();
 		price2.setQuantity(2);
 		price2.setType(ProductPrice.QuantityType.KG);
 		price2.setPrice(20);
-		price2.setStartDate(LocalDate.now()); // Set the start date
+		price2.setStartDate(currentTimestamp); // Set the start date
 
 		ProductPrice price3 = new ProductPrice();
 		price3.setQuantity(3);
 		price3.setType(ProductPrice.QuantityType.KG);
 		price3.setPrice(30);
-		price3.setStartDate(LocalDate.now()); // Set the start date
+		price3.setStartDate(currentTimestamp); // Set the start date
 
 		priceList.add(price1);
 		priceList.add(price2);
@@ -145,19 +146,19 @@ public class TestCreateProduct {
 		price1.setQuantity(1);
 		price1.setType(ProductPrice.QuantityType.KG);
 		price1.setPrice(10);
-		price1.setStartDate(LocalDate.now()); // Set the start date
+		price1.setStartDate(currentTimestamp); // Set the start date
 
 		ProductPrice price2 = new ProductPrice();
 		price2.setQuantity(2);
 		price2.setType(ProductPrice.QuantityType.KG);
 		price2.setPrice(20);
-		price2.setStartDate(LocalDate.now()); // Set the start date
+		price2.setStartDate(currentTimestamp); // Set the start date
 
 		ProductPrice price3 = new ProductPrice();
 		price3.setQuantity(3);
 		price3.setType(ProductPrice.QuantityType.KG);
 		price3.setPrice(30);
-		price3.setStartDate(LocalDate.now()); // Set the start date
+		price3.setStartDate(currentTimestamp); // Set the start date
 
 		priceList.add(price1);
 		priceList.add(price2);
@@ -269,19 +270,19 @@ public class TestCreateProduct {
 		price1.setQuantity(1);
 		price1.setType(ProductPrice.QuantityType.KG);
 		price1.setPrice(10);
-		price1.setStartDate(LocalDate.now()); // Set the start date
+		price1.setStartDate(currentTimestamp); // Set the start date
 
 		ProductPrice price2 = new ProductPrice();
 		price2.setQuantity(2);
 		price2.setType(ProductPrice.QuantityType.KG);
 		price2.setPrice(20);
-		price2.setStartDate(LocalDate.now()); // Set the start date
+		price2.setStartDate(currentTimestamp); // Set the start date
 
 		ProductPrice price3 = new ProductPrice();
 		price3.setQuantity(3);
 		price3.setType(ProductPrice.QuantityType.KG);
 		price3.setPrice(30);
-		price3.setStartDate(LocalDate.now()); // Set the start date
+		price3.setStartDate(currentTimestamp); // Set the start date
 
 		priceList.add(price1);
 		priceList.add(price2);
