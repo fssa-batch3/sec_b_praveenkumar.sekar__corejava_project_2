@@ -4,6 +4,7 @@ package in.fssa.homebakery.service;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.List;
 import java.util.Set;
 
 import in.fssa.homebakery.dao.ProductDAO;
@@ -24,10 +25,10 @@ public class ProductService {
 		ProductValidator.validate(newProduct);
 		ProductValidator.validatePriceList(newProduct.getPrices());
 
-		productDao.create(newProduct);
+		int id = productDao.create(newProduct);
 
 		for (ProductPrice newPrice : newProduct.getPrices()) {
-			productPriceDao.create(newPrice, newProduct.getId());
+			productPriceDao.create(newPrice, id);
 		}
 
 	}
@@ -44,10 +45,14 @@ public class ProductService {
 		productDao.delete(id);
 	}
 	
-	public Set<Product> getAll() {
+	public Set<ProductDetailDTO> getAll() {
 		ProductDAO productDao = new ProductDAO();
-		Set<Product> productList = productDao.findAll();
-		for (Product product : productList) {
+		ProductPriceDAO priceDao = new ProductPriceDAO();
+		
+		Set<ProductDetailDTO> productList = productDao.findAll();
+		for (ProductDetailDTO product : productList) {
+			List<ProductPrice> prices = priceDao.findByProductId(product.getId());
+			product.setPrices(prices);
 			System.out.println(product);
 		}
 		return productList;
@@ -65,6 +70,7 @@ public class ProductService {
 	        conn = ConnectionUtil.getConnection();
 	        stmt = conn.prepareStatement(query);
 	        stmt.setInt(1, productId);
+	        stmt.setInt(2, 1);
 
 	        rs = stmt.executeQuery();
 	        if (rs.next()) {

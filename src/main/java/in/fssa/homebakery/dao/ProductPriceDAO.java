@@ -22,7 +22,7 @@ public class ProductPriceDAO {
 		try {
 			String query = "INSERT INTO product_prices (product_id, price, quantity, type, start_date) VALUES (?, ?, ?, ?, ?)";
 			conn = ConnectionUtil.getConnection();
-			stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+			stmt = conn.prepareStatement(query);
 
 			stmt.setInt(1, productId);
 			stmt.setDouble(2, newPrice.getPrice());
@@ -42,9 +42,10 @@ public class ProductPriceDAO {
 		}
 	}
 
-	public void update(int id, ProductPrice productPrice, double quantity, Timestamp time) {
+	public void update(int id, ProductPrice productPrice, double quantity) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
+		Timestamp time = new Timestamp(System.currentTimeMillis());
 
 		try {
 			String query = "INSERT INTO product_prices (product_id, price, quantity, type, start_date) VALUES (?, ?, ?, ?, ?)";
@@ -59,6 +60,7 @@ public class ProductPriceDAO {
 			stmt.executeUpdate();
 
 			System.out.println("A new row has been inserted into product_prices");
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());

@@ -12,14 +12,14 @@ import in.fssa.homebakery.interface_files.ProductInterface;
 import in.fssa.homebakery.model.Product;
 import in.fssa.homebakery.util.ConnectionUtil;
 
-public class ProductDAO implements ProductInterface {
+public class ProductDAO {
 
-	@Override
+	 
 	public void create(Product newProduct) {
 		System.out.println("cannot create product");
 	}
 
-	@Override
+	 
 	public void update(int id, Product newProduct) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -49,7 +49,7 @@ public class ProductDAO implements ProductInterface {
 
 	}
 
-	@Override
+	 
 	public void delete(int id) {
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -74,11 +74,10 @@ public class ProductDAO implements ProductInterface {
 
 	}
 
-	@Override
-	public Set<Product> findAll() {
+	public Set<ProductDetailDTO> findAll() {
 		Connection conn = null;
 		PreparedStatement ps = null;
-		Set<Product> setOfUser = new HashSet<>();
+		Set<ProductDetailDTO> setOfUser = new HashSet<>();
 		ResultSet rs = null;
 
 		try {
@@ -88,9 +87,9 @@ public class ProductDAO implements ProductInterface {
 			rs = ps.executeQuery();
 
 			while (rs.next()) {
-				Product product = new Product();
+				ProductDetailDTO product = new ProductDetailDTO();
 				product.setId(rs.getInt("id"));
-				product.setProductName(rs.getString("produt_name"));
+				product.setName(rs.getString("product_name"));
 				product.setDescription(rs.getString("description"));
 				product.setCategoryId(rs.getInt("categoru_id"));
 				product.setVeg(rs.getBoolean("is_veg"));
@@ -108,7 +107,7 @@ public class ProductDAO implements ProductInterface {
 		return setOfUser;
 	}
 
-	@Override
+	 
 	public Product findById(int id) {
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -144,11 +143,12 @@ public class ProductDAO implements ProductInterface {
 		return product;
 	}
 
-	@Override
-	public void create(ProductDetailDTO productDetailDto) {
+	 
+	public int create(ProductDetailDTO productDetailDto) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
-
+		int productId = -1;
+		
 		try {
 			String query = "INSERT INTO products (product_name, description, category_id, is_veg, is_active) VALUES (?, ?, ?, ?, ?)";
 			conn = ConnectionUtil.getConnection();
@@ -163,13 +163,12 @@ public class ProductDAO implements ProductInterface {
 
 			System.out.println("Product has been successfully created");
 
-			try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-				if (generatedKeys.next()) {
-					int productId = generatedKeys.getInt(1);
-					productDetailDto.setId(productId);
-				}
-			}
-
+			 ResultSet generatedKeys = stmt.getGeneratedKeys();
+		        if (generatedKeys.next()) {
+		            productId = generatedKeys.getInt(1);
+		        }
+		        
+		        
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
@@ -177,6 +176,7 @@ public class ProductDAO implements ProductInterface {
 		} finally {
 			ConnectionUtil.close(conn, stmt);
 		}
+		return productId;
 	}
 
 }

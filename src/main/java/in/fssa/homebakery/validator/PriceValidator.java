@@ -18,4 +18,10 @@ public class PriceValidator {
 			throw new ValidationException("Invalid Quantity");
 		}
 	}
+	
+	public static void validateQuantity(double quantity) throws Exception{
+		if(quantity <= 0.0) {
+			throw new ValidationException("Invalid Quantity");
+		}
+	}
 }
