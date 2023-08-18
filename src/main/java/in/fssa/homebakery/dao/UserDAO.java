@@ -13,6 +13,9 @@ import in.fssa.homebakery.util.ConnectionUtil;
 
 public class UserDAO implements UserInterface {
 
+	/**
+	 * @param newUser
+	 */
 	@Override
 	public void create(User newUser) throws RuntimeException {
 		Connection conn = null;
@@ -27,7 +30,7 @@ public class UserDAO implements UserInterface {
 			ps.setString(2, newUser.getLastName());
 			ps.setString(3, newUser.getEmail());
 			ps.setString(4, newUser.getPassword());
-			ps.setLong(4, newUser.getPhoneNo());
+			ps.setLong(5, newUser.getPhoneNo());
 			ps.executeUpdate();
 
 			System.out.println("User has been successfully created");
@@ -40,6 +43,10 @@ public class UserDAO implements UserInterface {
 		}
 	}
 
+	/**
+	 * @param id
+	 * @param updatedUser
+	 */
 	@Override
 	public void update(int id,User updatedUser) {
 		Connection conn = null;
@@ -66,6 +73,9 @@ public class UserDAO implements UserInterface {
 		}
 	}
 
+	/**
+	 * @param userId
+	 */
 	@Override
 	public void delete(int userId) {
 		Connection conn = null;
@@ -90,6 +100,9 @@ public class UserDAO implements UserInterface {
 		}
 	}
 	
+	/**
+	 * @return
+	 */
 	@Override
 	public Set<User> findAll() throws RuntimeException {
 //		Set<User> userList = UserList.listOfUsers;
@@ -127,6 +140,10 @@ public class UserDAO implements UserInterface {
 		return setOfUser;
 	}
 
+	/**
+	 * @return
+	 * @param userId
+	 */
 	@Override
 	public User findById(int userId) throws RuntimeException {
 

@@ -14,12 +14,11 @@ import in.fssa.homebakery.util.ConnectionUtil;
 
 public class ProductDAO {
 
-	 
-	public void create(Product newProduct) {
-		System.out.println("cannot create product");
-	}
-
-	 
+	/**
+	 * 
+	 * @param id
+	 * @param newProduct
+	 */
 	public void update(int id, Product newProduct) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -49,7 +48,10 @@ public class ProductDAO {
 
 	}
 
-	 
+	/**
+	 * 
+	 * @param id
+	 */
 	public void delete(int id) {
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -73,7 +75,11 @@ public class ProductDAO {
 		}
 
 	}
-
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public Set<ProductDetailDTO> findAll() {
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -107,7 +113,11 @@ public class ProductDAO {
 		return setOfUser;
 	}
 
-	 
+	 /**
+	  * 
+	  * @param id
+	  * @return
+	  */
 	public Product findById(int id) {
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -143,7 +153,11 @@ public class ProductDAO {
 		return product;
 	}
 
-	 
+	/**
+	 * 
+	 * @param productDetailDto
+	 * @return
+	 */
 	public int create(ProductDetailDTO productDetailDto) {
 		Connection conn = null;
 		PreparedStatement stmt = null;

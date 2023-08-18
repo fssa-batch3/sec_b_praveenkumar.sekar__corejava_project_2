@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -14,7 +15,13 @@ import in.fssa.homebakery.model.ProductPriceEntity.QuantityType;
 import in.fssa.homebakery.util.ConnectionUtil;
 
 public class ProductPriceDAO {
-
+	
+	
+	/**
+	 * 
+	 * @param newPrice
+	 * @param productId
+	 */
 	public void create(ProductPrice newPrice, int productId) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -41,7 +48,13 @@ public class ProductPriceDAO {
 			ConnectionUtil.close(conn, stmt);
 		}
 	}
-
+	
+	/**
+	 * 
+	 * @param id
+	 * @param productPrice
+	 * @param quantity
+	 */
 	public void update(int id, ProductPrice productPrice, double quantity) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -69,12 +82,52 @@ public class ProductPriceDAO {
 			ConnectionUtil.close(conn, stmt);
 		}
 	}
+	
+	/**
+	 * 
+	 * @param productId
+	 * @param quantity
+	 */
+	public void setEndDate(int productId, double quantity) {
+		Connection conn = null;
+	    PreparedStatement stmt = null;
+
+	    try {
+	        String query = "UPDATE product_prices SET end_date = ? WHERE product_id = ? AND quantity = ? AND end_date IS NULL";
+	        conn = ConnectionUtil.getConnection();
+	        stmt = conn.prepareStatement(query);
+
+	        // Set the parameters for the prepared statement
+	        stmt.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+	        stmt.setInt(2, productId);
+	        stmt.setDouble(3, quantity);
+
+	        // Execute the update
+	        int rowsUpdated = stmt.executeUpdate();
+	        
+	        if (rowsUpdated > 0) {
+	            System.out.println("End date has been set for productId: " + productId + ", quantity: " + quantity);
+	        } else {
+	            System.out.println("No matching rows found with productId: " + productId + ", quantity: " + quantity + " or end_date is already set.");
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        System.out.println(e.getMessage());
+	        throw new RuntimeException(e);
+	    } finally {
+	        ConnectionUtil.close(conn, stmt);
+	    }
+	}
 
 	public void delete(int id) {
 		// TODO Auto-generated method stub
 
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public Set<ProductPrice> findAll() {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -109,7 +162,12 @@ public class ProductPriceDAO {
 			ConnectionUtil.close(conn, stmt, rs);
 		}
 	}
-
+	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public List<ProductPrice> findByProductId(int id) {
 	    Connection conn = null;
 	    PreparedStatement stmt = null;
@@ -147,7 +205,11 @@ public class ProductPriceDAO {
 	    }
 	}
 
-
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public ProductPrice findById(int id) {
 	    Connection conn = null;
 	    PreparedStatement stmt = null;
@@ -183,7 +245,12 @@ public class ProductPriceDAO {
 	        ConnectionUtil.close(conn, stmt, rs);
 	    }
 	}
-
+	
+	/**
+	 * 
+	 * @param productId
+	 * @return
+	 */
 	public List<ProductPrice> findCurrentPrice(int productId) {
 	    Connection conn = null;
 	    PreparedStatement stmt = null;

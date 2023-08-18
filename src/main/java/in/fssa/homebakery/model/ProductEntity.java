@@ -9,7 +9,7 @@ public class ProductEntity {
 	private String name;
 	private String description;
 	private int categoryId;
-	private List<ProductPrice> price;   //  {  id, name, desc, category_id, [ { 500g, 10},{1kg, 20}, {2kg, 30} ]  }
+//	private List<ProductPrice> price;   //  {  id, name, desc, category_id, [ { 500g, 10},{1kg, 20}, {2kg, 30} ]  }
 	private boolean isVeg;
 	private boolean isActive;
 	

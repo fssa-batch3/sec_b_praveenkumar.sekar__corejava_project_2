@@ -13,10 +13,16 @@ import in.fssa.homebakery.dto.ProductDetailDTO;
 import in.fssa.homebakery.model.Product;
 import in.fssa.homebakery.model.ProductPrice;
 import in.fssa.homebakery.util.ConnectionUtil;
+import in.fssa.homebakery.util.IntUtil;
 import in.fssa.homebakery.validator.ProductValidator;
 
 public class ProductService {
-
+	
+	/**
+	 * 
+	 * @param newProduct
+	 * @throws Exception
+	 */
 	public void create(ProductDetailDTO newProduct) throws Exception {
 
 		ProductDAO productDao = new ProductDAO();
@@ -33,6 +39,10 @@ public class ProductService {
 
 	}
 	
+	/**
+	 * 
+	 * @param id
+	 */
 	public void delete(int id) {
 		ProductDAO productDao = new ProductDAO();
 		
@@ -45,6 +55,10 @@ public class ProductService {
 		productDao.delete(id);
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public Set<ProductDetailDTO> getAll() {
 		ProductDAO productDao = new ProductDAO();
 		ProductPriceDAO priceDao = new ProductPriceDAO();
@@ -58,8 +72,32 @@ public class ProductService {
 		return productList;
 	}
 	
+	/**
+	 * 
+	 * @param id
+	 * @param newProduct
+	 * @throws Exception
+	 */
+	public void update (int id, Product newProduct) throws Exception {
+		IntUtil.rejectIfInvalidInt(id);
+		
+		boolean test = productExists(id);
+    	
+    	if(!test) {
+    		throw new RuntimeException("Product does not exist");
+    	}
+    	
+    	ProductValidator.validate(newProduct);
+    	
+    	ProductDAO productDAO = new ProductDAO();
+    	productDAO.update(id, newProduct);
+	}
 	
-	
+	/**
+	 * 
+	 * @param productId
+	 * @return
+	 */
 	public boolean productExists(int productId) {
 	    Connection conn = null;
 	    PreparedStatement stmt = null;
@@ -75,7 +113,7 @@ public class ProductService {
 	        rs = stmt.executeQuery();
 	        if (rs.next()) {
 	            int count = rs.getInt(1);
-	            return count > 0; // If count > 0, product exists
+	            return count > 0; 
 	        }
 
 	        return false; // No rows returned, product does not exist
@@ -86,7 +124,5 @@ public class ProductService {
 	        ConnectionUtil.close(conn, stmt, rs);
 	    }
 	}
-
-
 
 }

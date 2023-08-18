@@ -5,6 +5,11 @@ import in.fssa.homebakery.model.ProductPrice;
 
 public class PriceValidator {
 	
+	/**
+	 * 
+	 * @param price
+	 * @throws Exception
+	 */
 	public static void validate(ProductPrice price) throws Exception {
 		if(price == null) {
 			throw new ValidationException("Price cannot be null");
@@ -19,6 +24,11 @@ public class PriceValidator {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param quantity
+	 * @throws Exception
+	 */
 	public static void validateQuantity(double quantity) throws Exception{
 		if(quantity <= 0.0) {
 			throw new ValidationException("Invalid Quantity");

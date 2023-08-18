@@ -16,9 +16,12 @@ public class CategoryDAO implements CategoryInterface{
 	@Override
 	public void create(Category newT) {
 		System.out.println("Cannot create new category");
-		
 	}
-
+	
+	/**
+	 * @param updatedCategory
+	 * @param id
+	 */
 	@Override
 	public void update(int id, Category updatedCategory) {
 		Connection conn = null;
@@ -42,12 +45,18 @@ public class CategoryDAO implements CategoryInterface{
 			ConnectionUtil.close(conn, ps);
 		}
 	}
-
+	
+	/**
+	 * @param id
+	 */
 	@Override
 	public void delete(int id) {
 		System.out.println("Cannot delete categories");
 	}
-
+	
+	/**
+	 * @return 
+	 */
 	@Override
 	public Set<Category> findAll() {
 		Connection conn = null;
@@ -77,7 +86,11 @@ public class CategoryDAO implements CategoryInterface{
 		}
 		return setOfCategory;
 	}
-
+	
+	/**
+	 * @param id
+	 * @return
+	 */
 	@Override
 	public Category findById(int id) {
 		Connection conn = null;

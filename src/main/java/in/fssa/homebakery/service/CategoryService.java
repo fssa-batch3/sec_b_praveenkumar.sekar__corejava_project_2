@@ -11,7 +11,13 @@ import in.fssa.homebakery.util.ConnectionUtil;
 import in.fssa.homebakery.validator.CategoryValidator;
 
 public class CategoryService {
-
+	
+	/**
+	 * 
+	 * @param categoryId
+	 * @return
+	 * @throws Exception
+	 */
 	public Category findById(int categoryId) throws Exception {
 		CategoryValidator.validateId(categoryId);
 		boolean test = categoryExists(categoryId);
@@ -23,7 +29,13 @@ public class CategoryService {
 		CategoryDAO categoryDao = new CategoryDAO();
 		return categoryDao.findById(categoryId);
 	}
-
+	
+	/**
+	 * 
+	 * @param id
+	 * @param updatedCategory
+	 * @throws Exception
+	 */
 	public void update(int id, Category updatedCategory) throws Exception {
 		CategoryValidator.validateId(id);
 
@@ -37,7 +49,11 @@ public class CategoryService {
 		categoryDao.update(2, updatedCategory);
 
 	}
-
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public Set<Category> getAll() {
 		CategoryDAO categoryDAO = new CategoryDAO();
 
@@ -45,7 +61,12 @@ public class CategoryService {
 
 		return categoryList;
 	}
-
+	
+	/**
+	 * 
+	 * @param categoryId
+	 * @return
+	 */
 	public boolean categoryExists(int categoryId) {
 		Connection conn = null;
 		PreparedStatement stmt = null;

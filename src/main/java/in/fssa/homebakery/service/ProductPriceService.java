@@ -14,7 +14,14 @@ import in.fssa.homebakery.util.IntUtil;
 import in.fssa.homebakery.validator.PriceValidator;
 
 public class ProductPriceService {
-
+	
+	/**
+	 * 
+	 * @param id
+	 * @param productPrice
+	 * @param quantity
+	 * @throws Exception
+	 */
     public void update(int id, ProductPrice productPrice, double quantity) throws Exception {
     	ProductService productService = new ProductService();
     	
@@ -34,9 +41,15 @@ public class ProductPriceService {
     		throw new RuntimeException("Quantity does not exist");
     	}
     	ProductPriceDAO productPriceDAO = new ProductPriceDAO();
+    	
+    	productPriceDAO.setEndDate(id, quantity);
         productPriceDAO.update(id, productPrice, quantity);
     }
-
+    
+    /**
+     * 
+     * @return
+     */
     public Set<ProductPrice> findAll() {
     	ProductPriceDAO productPriceDAO = new ProductPriceDAO();
     	Set<ProductPrice> priceList = productPriceDAO.findAll();
@@ -45,7 +58,13 @@ public class ProductPriceService {
 		}
 		return priceList;
     }
-
+    
+    /**
+     * 
+     * @param id
+     * @return
+     * @throws Exception
+     */
     public List<ProductPrice> findByProductId(int id) throws Exception {
     	IntUtil.rejectIfInvalidInt(id);
     	ProductService productService = new ProductService();
@@ -63,13 +82,24 @@ public class ProductPriceService {
 		}
 		return priceList;
     }
-
+    
+    /**
+     * 
+     * @param id
+     * @return
+     * @throws Exception
+     */
     public ProductPrice findById(int id) throws Exception {
     	IntUtil.rejectIfInvalidInt(id);
     	ProductPriceDAO productPriceDAO = new ProductPriceDAO();
         return productPriceDAO.findById(id);
     }
-
+    /**
+     * 
+     * @param productId
+     * @return
+     * @throws Exception
+     */
     public List<ProductPrice> findCurrentPrice(int productId) throws Exception {
     	IntUtil.rejectIfInvalidInt(productId);
     	ProductService productService = new ProductService();
@@ -88,13 +118,19 @@ public class ProductPriceService {
 		return priceList;
     }
 	
+    /**
+     * 
+     * @param productId
+     * @param quantity
+     * @return
+     */
 	public boolean quantityExistsForProduct(int productId, double quantity) {
 	    Connection conn = null;
 	    PreparedStatement stmt = null;
 	    ResultSet rs = null;
 
 	    try {
-	        String query = "SELECT * FROM product_prices WHERE id = ? AND quantity = ?";
+	        String query = "SELECT COUNT(*) FROM product_prices WHERE product_id = ? AND quantity = ?";
 	        conn = ConnectionUtil.getConnection();
 	        stmt = conn.prepareStatement(query);
 	        stmt.setInt(1, productId);
