@@ -14,7 +14,16 @@ import in.fssa.homebakery.util.ConnectionUtil;
 public class UserDAO implements UserInterface {
 
 	/**
-	 * @param newUser
+	 * Creates a new user entry in the database.
+	 *
+	 * This method inserts a new user entry into the 'users' table in the database.
+	 * The user information is obtained from the 'newUser' parameter, including first name, last name,
+	 * email, password, and phone number. If the insertion is successful, a new user record is created.
+	 * If any exception occurs during the process, it is caught, and a RuntimeException is thrown.
+	 *
+	 * @param newUser An instance of 'User' containing the user information to be created.
+	 * @throws RuntimeException If an error occurs during the database insertion process.
+	 *                          The original exception is printed, and a RuntimeException is thrown.
 	 */
 	@Override
 	public void create(User newUser) throws RuntimeException {
@@ -44,8 +53,18 @@ public class UserDAO implements UserInterface {
 	}
 
 	/**
-	 * @param id
-	 * @param updatedUser
+	 * Updates an existing user entry in the database.
+	 *
+	 * This method updates an existing user entry in the 'users' table in the database.
+	 * The user information is obtained from the 'updatedUser' parameter, including updated first name,
+	 * last name, and phone number. The update is performed based on the provided 'id', and it only affects
+	 * active user entries (where 'is_active' is 1). If the update is successful, the user record is modified.
+	 * If any exception occurs during the process, it is caught, and a RuntimeException is thrown.
+	 *
+	 * @param id          The ID of the user to be updated.
+	 * @param updatedUser An instance of 'User' containing the updated user information.
+	 * @throws RuntimeException If an error occurs during the database update process.
+	 *                          The original exception is printed, and a RuntimeException is thrown.
 	 */
 	@Override
 	public void update(int id,User updatedUser) {
@@ -74,7 +93,16 @@ public class UserDAO implements UserInterface {
 	}
 
 	/**
-	 * @param userId
+	 * Deactivates an existing user entry in the database.
+	 *
+	 * This method deactivates an existing user entry in the 'users' table in the database.
+	 * The deactivation is performed based on the provided 'userId'. The user entry is marked as inactive
+	 * by setting the 'is_active' column to 0. If the deactivation is successful, the user record is deactivated.
+	 * If any exception occurs during the process, it is caught, and a RuntimeException is thrown.
+	 *
+	 * @param userId The ID of the user to be deactivated.
+	 * @throws RuntimeException If an error occurs during the database deactivation process.
+	 *                          The original exception is printed, and a RuntimeException is thrown.
 	 */
 	@Override
 	public void delete(int userId) {
@@ -101,7 +129,16 @@ public class UserDAO implements UserInterface {
 	}
 	
 	/**
-	 * @return
+	 * Retrieves all active user entries from the database.
+	 *
+	 * This method queries the database to retrieve all active user entries stored in the 'users' table
+	 * that have 'is_active' set to 1. For each matching active user entry, a 'User' object is created,
+	 * populated with the retrieved data, and added to a 'Set'. The set is then returned, containing details of
+	 * all active user entries. If any exception occurs during the process, it is caught, and a RuntimeException is thrown.
+	 *
+	 * @return A 'Set' containing 'User' objects representing details of all active user entries.
+	 * @throws RuntimeException If an error occurs during the database retrieval process.
+	 *                          The original exception is printed, and a RuntimeException is thrown.
 	 */
 	@Override
 	public Set<User> findAll() throws RuntimeException {
@@ -141,8 +178,18 @@ public class UserDAO implements UserInterface {
 	}
 
 	/**
-	 * @return
-	 * @param userId
+	 * Retrieves an active user entry from the database by its ID.
+	 *
+	 * This method queries the database to retrieve an active user entry stored in the 'users' table
+	 * that matches the provided 'userId' and has 'is_active' set to 1. If a matching active user entry is found,
+	 * a 'User' object is created, populated with the retrieved data, and returned. If no matching entry is found,
+	 * the method returns null. If any exception occurs during the process, it is caught, and a RuntimeException is thrown.
+	 *
+	 * @param userId The ID of the user to be retrieved.
+	 * @return A 'User' object representing the details of the retrieved user entry.
+	 *         If no matching active entry is found, null is returned.
+	 * @throws RuntimeException If an error occurs during the database retrieval process.
+	 *                          The original exception is printed, and a RuntimeException is thrown.
 	 */
 	@Override
 	public User findById(int userId) throws RuntimeException {

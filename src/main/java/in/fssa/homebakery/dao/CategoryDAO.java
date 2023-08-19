@@ -19,11 +19,19 @@ public class CategoryDAO implements CategoryInterface{
 	}
 	
 	/**
-	 * @param updatedCategory
-	 * @param id
+	 * Updates the category information with the specified ID in the database.
+	 *
+	 * This method updates the category name for the category with the provided ID.
+	 * The updated category information is obtained from the 'updatedCategory' parameter.
+	 * If the update is successful, the database record is modified, and a success message is printed.
+	 * If any exception occurs during the process, it is caught, and a RuntimeException is thrown.
+	 *
+	 * @param id                The ID of the category to be updated.
+	 * @param updatedCategory   An instance of the 'Category' class containing the updated category information.
+	 *                          It should have the updated category name.
 	 */
 	@Override
-	public void update(int id, Category updatedCategory) {
+	public void update(int id, Category updatedCategory){
 		Connection conn = null;
 		PreparedStatement ps = null;
 
