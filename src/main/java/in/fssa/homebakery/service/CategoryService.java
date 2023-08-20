@@ -11,12 +11,25 @@ import in.fssa.homebakery.util.ConnectionUtil;
 import in.fssa.homebakery.validator.CategoryValidator;
 
 public class CategoryService {
-	
+
 	/**
-	 * 
-	 * @param categoryId
-	 * @return
-	 * @throws Exception
+	 * Retrieves a category by its ID.
+	 *
+	 * This method validates the provided 'categoryId' using the
+	 * 'CategoryValidator.validateId' method, ensuring that it is a valid category
+	 * ID. It then checks if the category exists using the 'categoryExists' method.
+	 * If the category does not exist, a RuntimeException is thrown with the message
+	 * "Category does not exist". If the category exists, the method uses a
+	 * 'CategoryDAO' instance to retrieve and return the category details
+	 * corresponding to the provided 'categoryId'.
+	 *
+	 * @param categoryId The ID of the category to be retrieved.
+	 * @return A 'Category' object representing the details of the retrieved
+	 *         category.
+	 * @throws Exception If the provided 'categoryId' is not valid, or if an error
+	 *                   occurs during the database retrieval process. The specific
+	 *                   exception type and message depend on the underlying
+	 *                   validation and retrieval logic.
 	 */
 	public Category findById(int categoryId) throws Exception {
 		CategoryValidator.validateId(categoryId);
@@ -29,12 +42,26 @@ public class CategoryService {
 		CategoryDAO categoryDao = new CategoryDAO();
 		return categoryDao.findById(categoryId);
 	}
-	
+
 	/**
-	 * 
-	 * @param id
-	 * @param updatedCategory
-	 * @throws Exception
+	 * Updates an existing category entry in the database.
+	 *
+	 * This method validates the provided 'id' using the
+	 * 'CategoryValidator.validateId' method, ensuring that it is a valid category
+	 * ID. It then checks if the category exists using the 'categoryExists' method.
+	 * If the category does not exist, a RuntimeException is thrown with the message
+	 * "Category does not exist". If the category exists, the method uses a
+	 * 'CategoryDAO' instance to update the category details based on the provided
+	 * 'updatedCategory'. The category update is performed using the
+	 * 'categoryDao.update' method.
+	 *
+	 * @param id              The ID of the category to be updated.
+	 * @param updatedCategory An instance of 'Category' containing the updated
+	 *                        category information.
+	 * @throws Exception If the provided 'id' is not valid, or if an error occurs
+	 *                   during the database update process. The specific exception
+	 *                   type and message depend on the underlying validation and
+	 *                   update logic.
 	 */
 	public void update(int id, Category updatedCategory) throws Exception {
 		CategoryValidator.validateId(id);
@@ -49,10 +76,16 @@ public class CategoryService {
 		categoryDao.update(2, updatedCategory);
 
 	}
-	
+
 	/**
-	 * 
-	 * @return
+	 * Retrieves all categories from the database.
+	 *
+	 * This method uses a 'CategoryDAO' instance to retrieve all category entries
+	 * stored in the database. The retrieved categories are returned as a 'Set' of
+	 * 'Category' objects.
+	 *
+	 * @return A 'Set' containing 'Category' objects representing the details of all
+	 *         categories.
 	 */
 	public Set<Category> getAll() {
 		CategoryDAO categoryDAO = new CategoryDAO();
@@ -61,11 +94,20 @@ public class CategoryService {
 
 		return categoryList;
 	}
-	
+
 	/**
-	 * 
-	 * @param categoryId
-	 * @return
+	 * Checks if a category with the given ID exists in the database.
+	 *
+	 * This method queries the database to check if a category with the provided
+	 * 'categoryId' exists in the 'categories' table. If a category with the given
+	 * ID is found, the method returns 'true'. Otherwise, it returns 'false'.
+	 *
+	 * @param categoryId The ID of the category to check for existence.
+	 * @return 'true' if a category with the provided ID exists in the database,
+	 *         'false' otherwise.
+	 * @throws RuntimeException If an error occurs during the database query
+	 *                          process. The original exception is printed, and a
+	 *                          RuntimeException is thrown.
 	 */
 	public boolean categoryExists(int categoryId) {
 		Connection conn = null;

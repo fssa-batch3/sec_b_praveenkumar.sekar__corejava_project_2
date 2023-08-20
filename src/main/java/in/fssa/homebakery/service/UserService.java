@@ -13,10 +13,16 @@ import in.fssa.homebakery.util.IntUtil;
 import in.fssa.homebakery.validator.UserValidator;
 
 public class UserService {
-	
+
 	/**
+	 * Retrieves a set of all active users from the database.
+	 *
+	 * This method queries the database to retrieve a set of all users who are
+	 * marked as active. The retrieved user information is encapsulated in User
+	 * objects and added to the returned set.
 	 * 
-	 * @return
+	 * @return A set containing all active users retrieved from the database.
+	 * @throws RuntimeException If an error occurs while querying the database.
 	 */
 	public Set<User> getAll() {
 		UserDAO userDao = new UserDAO();
@@ -26,23 +32,39 @@ public class UserService {
 		}
 		return userList;
 	}
-	
+
 	/**
+	 * Creates a new user in the database.
+	 *
+	 * This method is responsible for creating a new user in the database based on
+	 * the provided User object. The provided user information is validated before
+	 * attempting to create the user in the database.
 	 * 
-	 * @param newUser
-	 * @throws Exception
+	 * @param newUser The User object containing the details of the new user to be
+	 *                created.
+	 * @throws Exception If the provided user information is invalid or an error
+	 *                   occurs during database interaction.
 	 */
 	public void create(User newUser) throws Exception {
 		UserDAO userDao = new UserDAO();
 		UserValidator.validate(newUser);
 		userDao.create(newUser);
 	}
-	
+
 	/**
+	 * Updates an existing user's information in the database.
+	 *
+	 * This method is responsible for updating the information of an existing user
+	 * in the database based on the provided user ID and updated User object. The
+	 * provided user ID and updated information are validated before attempting to
+	 * update the user's information in the database.
 	 * 
-	 * @param id
-	 * @param updatedUser
-	 * @throws Exception
+	 * @param id          The ID of the user whose information needs to be updated.
+	 * @param updatedUser The User object containing the updated details of the
+	 *                    user.
+	 * @throws Exception If the provided user ID is invalid, the user does not
+	 *                   exist, the updated user information is invalid, or an error
+	 *                   occurs during database interaction.
 	 */
 	public void update(int id, User updatedUser) throws Exception {
 		UserDAO userDao = new UserDAO();
@@ -58,11 +80,18 @@ public class UserService {
 		userDao.update(id, updatedUser);
 
 	}
-	
+
 	/**
+	 * Deletes a user from the database.
+	 *
+	 * This method is responsible for deleting a user from the database based on the
+	 * provided user ID. The provided user ID is validated before attempting to
+	 * delete the user.
 	 * 
-	 * @param userId
-	 * @throws ValidationException
+	 * @param userId The ID of the user to be deleted.
+	 * @throws ValidationException If the provided user ID is invalid.
+	 * @throws RuntimeException    If the user does not exist or an error occurs
+	 *                             during database interaction.
 	 */
 	public void delete(int userId) throws ValidationException {
 
@@ -76,12 +105,19 @@ public class UserService {
 		UserDAO userDao = new UserDAO();
 		userDao.delete(userId);
 	}
-	
+
 	/**
+	 * Retrieves a user from the database based on the provided user ID.
+	 *
+	 * This method is responsible for retrieving a user from the database using the
+	 * provided user ID. The provided user ID is validated before attempting to
+	 * retrieve the user.
 	 * 
-	 * @param userId
-	 * @return
-	 * @throws ValidationException
+	 * @param userId The ID of the user to be retrieved.
+	 * @return The retrieved user.
+	 * @throws ValidationException If the provided user ID is invalid.
+	 * @throws RuntimeException    If the user does not exist or an error occurs
+	 *                             during database interaction.
 	 */
 	public User findById(int userId) throws ValidationException {
 		IntUtil.rejectIfInvalidInt(userId);
@@ -91,15 +127,21 @@ public class UserService {
 		if (!check) {
 			throw new RuntimeException("User does not exist");
 		}
-		
+
 		UserDAO userDao = new UserDAO();
 		return userDao.findById(userId);
 	}
-	
+
 	/**
+	 * Checks if a user with the provided user ID exists in the database.
+	 *
+	 * This method determines whether a user with the given user ID exists in the
+	 * database. It queries the database and returns a boolean value indicating the
+	 * presence of the user.
 	 * 
-	 * @param id
-	 * @return
+	 * @param id The ID of the user to be checked.
+	 * @return True if the user with the provided ID exists, otherwise false.
+	 * @throws RuntimeException If an error occurs during database interaction.
 	 */
 	public boolean isUserPresent(int id) {
 		Connection conn = null;
