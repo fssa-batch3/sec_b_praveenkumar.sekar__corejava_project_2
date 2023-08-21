@@ -58,7 +58,7 @@ public class TestUpdateProduct {
 		ProductService productService = new ProductService();
 
 		Product product = new Product();
-		int id = 5;
+		int id = 99;
 		product.setProductName("Banana cake");
 		product.setDescription("You can sleep very good");
 		product.setCategoryId(3);

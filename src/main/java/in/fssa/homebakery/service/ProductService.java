@@ -135,12 +135,17 @@ public class ProductService {
 	    ProductPriceDAO priceDao = new ProductPriceDAO();
 	    
 	    IntUtil.rejectIfInvalidInt(id);
+	    
+	    boolean test = productExists(id);
+
+		if (!test) {
+			throw new RuntimeException("Product does not exist");
+		}
 
 	    ProductDetailDTO product = productDao.findById(id);
 	    if (product != null) {
 	        List<ProductPrice> prices = priceDao.findByProductId(product.getId());
 	        product.setPrices(prices);
-	        System.out.println(product);
 	    }
 	    return product;
 	}
@@ -176,7 +181,6 @@ public class ProductService {
 	    for (ProductDetailDTO product : productList) {
 	        List<ProductPrice> prices = priceDao.findByProductId(product.getId());
 	        product.setPrices(prices);
-	        System.out.println(product);
 	    }
 	    return productList;
 	}

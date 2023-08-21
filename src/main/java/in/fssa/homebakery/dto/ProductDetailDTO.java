@@ -5,6 +5,7 @@ import java.util.List;
 import in.fssa.homebakery.model.ProductPrice;
 
 public class ProductDetailDTO {
+
 	private int id;
 	private String name;
 	private String description;
@@ -70,4 +71,9 @@ public class ProductDetailDTO {
 		this.priceList = prices;
 	}
 
+	@Override
+	public String toString() {
+		return "ProductDetailDTO [id=" + id + ", name=" + name + ", description=" + description + ", categoryId="
+				+ categoryId + ", isVeg=" + isVeg + ", isActive=" + isActive + ", priceList=" + priceList + "]";
+	}
 }

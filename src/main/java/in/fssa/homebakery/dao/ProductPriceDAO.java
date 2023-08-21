@@ -164,11 +164,6 @@ public class ProductPriceDAO {
 		}
 	}
 
-	public void delete(int id) {
-		// TODO Auto-generated method stub
-
-	}
-
 	/**
 	 * Retrieves all product price entries from the database.
 	 *
@@ -247,7 +242,7 @@ public class ProductPriceDAO {
 		ResultSet rs = null;
 
 		try {
-			String query = "SELECT * FROM product_prices WHERE product_id = ? ORDER BY start_date DESC";
+			String query = "SELECT * FROM product_prices WHERE product_id = ? AND end_date IS null";
 			conn = ConnectionUtil.getConnection();
 			stmt = conn.prepareStatement(query);
 			stmt.setInt(1, id);

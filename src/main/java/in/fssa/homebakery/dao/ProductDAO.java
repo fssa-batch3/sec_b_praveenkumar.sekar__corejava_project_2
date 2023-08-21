@@ -135,7 +135,7 @@ public class ProductDAO {
 				product.setId(rs.getInt("id"));
 				product.setName(rs.getString("product_name"));
 				product.setDescription(rs.getString("description"));
-				product.setCategoryId(rs.getInt("categoru_id"));
+				product.setCategoryId(rs.getInt("category_id"));
 				product.setVeg(rs.getBoolean("is_veg"));
 				product.setActive(rs.getBoolean("is_active"));
 				setOfUser.add(product);
@@ -188,9 +188,9 @@ public class ProductDAO {
 			if (rs.next()) {
 				product = new ProductDetailDTO();
 				product.setId(rs.getInt("id"));
-				product.setName(rs.getString("produt_name"));
+				product.setName(rs.getString("product_name"));
 				product.setDescription(rs.getString("description"));
-				product.setCategoryId(rs.getInt("categoru_id"));
+				product.setCategoryId(rs.getInt("category_id"));
 				product.setVeg(rs.getBoolean("is_veg"));
 				product.setActive(rs.getBoolean("is_active"));
 			}
