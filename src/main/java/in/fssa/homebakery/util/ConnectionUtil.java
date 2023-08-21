@@ -43,7 +43,7 @@ public class ConnectionUtil {
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			connection = DriverManager.getConnection(url, userName, password);
+			connection = DriverManager.getConnection(url, userName, passWord);
 
 		} catch (Exception e) {
 			e.printStackTrace();
