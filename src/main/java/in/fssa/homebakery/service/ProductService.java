@@ -9,6 +9,7 @@ import java.util.Set;
 import in.fssa.homebakery.dao.ProductDAO;
 import in.fssa.homebakery.dao.ProductPriceDAO;
 import in.fssa.homebakery.dto.ProductDetailDTO;
+import in.fssa.homebakery.exception.PersistanceException;
 import in.fssa.homebakery.exception.ValidationException;
 import in.fssa.homebakery.model.Product;
 import in.fssa.homebakery.model.ProductPrice;
@@ -72,11 +73,16 @@ public class ProductService {
 	 * method is invoked on it to delete the product entry.
 	 * 
 	 * @param id The ID of the product to be deleted.
+	 * @throws ValidationException 
+	 * @throws PersistanceException 
 	 * @throws RuntimeException If the specified product does not exist or if an
 	 *                          error occurs during the deletion process.
 	 */
-	public void delete(int id) {
+	public void delete(int id) throws ValidationException, PersistanceException {
 		ProductDAO productDao = new ProductDAO();
+		ProductPriceDAO productPriceDao = new ProductPriceDAO();
+		
+		IntUtil.rejectIfInvalidInt(id);
 
 		boolean test = productExists(id);
 
@@ -85,6 +91,7 @@ public class ProductService {
 		}
 
 		productDao.delete(id);
+		productPriceDao.delete(id);
 	}
 
 	/**
@@ -101,8 +108,9 @@ public class ProductService {
 	 *
 	 * @return A set containing 'ProductDetailDTO' objects, each representing a
 	 *         product along with its associated product prices.
+	 * @throws PersistanceException 
 	 */
-	public Set<ProductDetailDTO> getAll() {
+	public Set<ProductDetailDTO> getAll() throws PersistanceException {
 		ProductDAO productDao = new ProductDAO();
 		ProductPriceDAO priceDao = new ProductPriceDAO();
 
@@ -129,8 +137,9 @@ public class ProductService {
 	 * @return A 'ProductDetailDTO' object representing the retrieved product along with its associated product prices.
 	 *         Returns null if no matching product is found for the provided ID.
 	 * @throws ValidationException 
+	 * @throws PersistanceException 
 	 */
-	public ProductDetailDTO getById(int id) throws ValidationException {
+	public ProductDetailDTO getById(int id) throws ValidationException, PersistanceException {
 	    ProductDAO productDao = new ProductDAO();
 	    ProductPriceDAO priceDao = new ProductPriceDAO();
 	    
@@ -163,8 +172,9 @@ public class ProductService {
 	 * @return A set containing 'ProductDetailDTO' objects, each representing a product of the specified category along with its
 	 *         associated product prices.
 	 * @throws ValidationException 
+	 * @throws PersistanceException 
 	 */
-	public List<ProductDetailDTO> getByCategoryId(int categoryId) throws ValidationException {
+	public List<ProductDetailDTO> getByCategoryId(int categoryId) throws ValidationException, PersistanceException {
 	    ProductDAO productDao = new ProductDAO();
 	    ProductPriceDAO priceDao = new ProductPriceDAO();
 	    

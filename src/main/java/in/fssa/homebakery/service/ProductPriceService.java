@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import in.fssa.homebakery.dao.ProductPriceDAO;
+import in.fssa.homebakery.exception.PersistanceException;
 import in.fssa.homebakery.exception.ValidationException;
 import in.fssa.homebakery.model.ProductPrice;
 import in.fssa.homebakery.util.ConnectionUtil;
@@ -81,8 +82,9 @@ public class ProductPriceService {
 	 *
 	 * @return A 'Set' containing 'ProductPrice' objects representing the details of
 	 *         all product prices.
+	 * @throws PersistanceException 
 	 */
-	public Set<ProductPrice> findAll() {
+	public Set<ProductPrice> findAll() throws PersistanceException {
 		ProductPriceDAO productPriceDAO = new ProductPriceDAO();
 		Set<ProductPrice> priceList = productPriceDAO.findAll();
 		for (ProductPrice price : priceList) {

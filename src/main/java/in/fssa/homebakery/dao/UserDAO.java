@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
+import in.fssa.homebakery.exception.PersistanceException;
 import in.fssa.homebakery.interface_files.UserInterface;
 import in.fssa.homebakery.model.User;
 import in.fssa.homebakery.util.ConnectionUtil;
@@ -24,12 +25,13 @@ public class UserDAO implements UserInterface {
 	 *
 	 * @param newUser An instance of 'User' containing the user information to be
 	 *                created.
+	 * @throws PersistanceException 
 	 * @throws RuntimeException If an error occurs during the database insertion
 	 *                          process. The original exception is printed, and a
 	 *                          RuntimeException is thrown.
 	 */
 	@Override
-	public void create(User newUser) throws RuntimeException {
+	public void create(User newUser) throws PersistanceException {
 		Connection conn = null;
 		PreparedStatement ps = null;
 
@@ -46,10 +48,10 @@ public class UserDAO implements UserInterface {
 			ps.executeUpdate();
 
 			System.out.println("User has been successfully created");
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException();
+			throw new PersistanceException(e.getMessage());
 		} finally {
 			ConnectionUtil.close(conn, ps);
 		}
@@ -74,7 +76,7 @@ public class UserDAO implements UserInterface {
 	 *                          RuntimeException is thrown.
 	 */
 	@Override
-	public void update(int id, User updatedUser) {
+	public void update(int id, User updatedUser) throws PersistanceException{
 		Connection conn = null;
 		PreparedStatement ps = null;
 
@@ -90,10 +92,10 @@ public class UserDAO implements UserInterface {
 			ps.executeUpdate();
 
 			System.out.println("User has been successfully updated");
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException();
+			throw new PersistanceException(e.getMessage());
 		} finally {
 			ConnectionUtil.close(conn, ps);
 		}
@@ -110,12 +112,13 @@ public class UserDAO implements UserInterface {
 	 * thrown.
 	 *
 	 * @param userId The ID of the user to be deactivated.
+	 * @throws PersistanceException 
 	 * @throws RuntimeException If an error occurs during the database deactivation
 	 *                          process. The original exception is printed, and a
 	 *                          RuntimeException is thrown.
 	 */
 	@Override
-	public void delete(int userId) {
+	public void delete(int userId) throws PersistanceException {
 		Connection conn = null;
 		PreparedStatement ps = null;
 
@@ -129,10 +132,10 @@ public class UserDAO implements UserInterface {
 			ps.executeUpdate();
 
 			System.out.println("User has been successfully deactivated");
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException();
+			throw new PersistanceException(e.getMessage());
 		} finally {
 			ConnectionUtil.close(conn, ps);
 		}
@@ -153,11 +156,10 @@ public class UserDAO implements UserInterface {
 	 * @throws RuntimeException If an error occurs during the database retrieval
 	 *                          process. The original exception is printed, and a
 	 *                          RuntimeException is thrown.
+	 * @throws PersistanceException 
 	 */
 	@Override
-	public Set<User> findAll() throws RuntimeException {
-//		Set<User> userList = UserList.listOfUsers;
-//		return userList;
+	public Set<User> findAll() throws PersistanceException {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		Set<User> setOfUser = new HashSet<>();
@@ -184,9 +186,9 @@ public class UserDAO implements UserInterface {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException();
+			throw new PersistanceException(e.getMessage());
 		} finally {
-//			ConnectionUtil.close(conn, ps, rs);
+			ConnectionUtil.close(conn, ps, rs);
 		}
 		return setOfUser;
 	}
@@ -207,9 +209,10 @@ public class UserDAO implements UserInterface {
 	 * @throws RuntimeException If an error occurs during the database retrieval
 	 *                          process. The original exception is printed, and a
 	 *                          RuntimeException is thrown.
+	 * @throws PersistanceException 
 	 */
 	@Override
-	public User findById(int userId) throws RuntimeException {
+	public User findById(int userId) throws PersistanceException {
 
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -239,7 +242,7 @@ public class UserDAO implements UserInterface {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException();
+			throw new PersistanceException(e.getMessage());
 		} finally {
 			ConnectionUtil.close(conn, ps, rs);
 		}

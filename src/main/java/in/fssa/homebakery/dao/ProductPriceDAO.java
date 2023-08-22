@@ -3,6 +3,7 @@ package in.fssa.homebakery.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import in.fssa.homebakery.exception.PersistanceException;
 import in.fssa.homebakery.model.ProductPrice;
 import in.fssa.homebakery.model.ProductPriceEntity.QuantityType;
 import in.fssa.homebakery.util.ConnectionUtil;
@@ -31,11 +33,12 @@ public class ProductPriceDAO {
 	 *                  quantity, type, and start date.
 	 * @param productId The ID of the product for which the new price entry is being
 	 *                  created.
+	 * @throws PersistanceException 
 	 * @throws RuntimeException If an error occurs during the database insertion
 	 *                          process. The original exception is printed, and a
 	 *                          RuntimeException is thrown.
 	 */
-	public void create(ProductPrice newPrice, int productId) {
+	public void create(ProductPrice newPrice, int productId) throws PersistanceException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 
@@ -53,10 +56,10 @@ public class ProductPriceDAO {
 
 			System.out.println("Product prices have been successfully created");
 
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException(e);
+			throw new PersistanceException(e.getMessage());
 		} finally {
 			ConnectionUtil.close(conn, stmt);
 		}
@@ -80,11 +83,12 @@ public class ProductPriceDAO {
 	 *                     price details to be created. It should include the price,
 	 *                     type, and start date.
 	 * @param quantity     The updated quantity for the product price entry.
+	 * @throws PersistanceException 
 	 * @throws RuntimeException If an error occurs during the database insertion
 	 *                          process. The original exception is printed, and a
 	 *                          RuntimeException is thrown.
 	 */
-	public void update(int id, ProductPrice productPrice, double quantity) {
+	public void update(int id, ProductPrice productPrice, double quantity) throws PersistanceException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		Timestamp time = new Timestamp(System.currentTimeMillis());
@@ -103,13 +107,44 @@ public class ProductPriceDAO {
 
 			System.out.println("A new row has been inserted into product_prices");
 
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException();
+			throw new PersistanceException(e.getMessage());
 		} finally {
 			ConnectionUtil.close(conn, stmt);
 		}
+	}
+	
+	public void delete(int productId) throws PersistanceException {
+	    Connection conn = null;
+	    PreparedStatement stmt = null;
+
+	    try {
+	        String query = "UPDATE product_prices SET end_date = ? WHERE product_id = ? AND end_date IS NULL";
+	        conn = ConnectionUtil.getConnection();
+	        stmt = conn.prepareStatement(query);
+
+	        // Set the parameters for the prepared statement
+	        stmt.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+	        stmt.setInt(2, productId);
+
+	        // Execute the update
+	        int rowsUpdated = stmt.executeUpdate();
+
+	        if (rowsUpdated > 0) {
+	            System.out.println("Rows with null end_date have been updated for productId: " + productId);
+	        } else {
+	            System.out.println("No matching rows found with productId: " + productId
+	                    + " or all rows already have end_date set.");
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println(e.getMessage());
+	        throw new PersistanceException(e.getMessage());
+	    } finally {
+	        ConnectionUtil.close(conn, stmt);
+	    }
 	}
 
 	/**
@@ -128,11 +163,12 @@ public class ProductPriceDAO {
 	 * @param productId The ID of the product for which the end date of the price
 	 *                  entry is being set.
 	 * @param quantity  The quantity associated with the product price entry.
+	 * @throws PersistanceException 
 	 * @throws RuntimeException If an error occurs during the database update
 	 *                          process. The original exception is printed, and a
 	 *                          RuntimeException is thrown.
 	 */
-	public void setEndDate(int productId, double quantity) {
+	public void setEndDate(int productId, double quantity) throws PersistanceException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 
@@ -155,10 +191,10 @@ public class ProductPriceDAO {
 				System.out.println("No matching rows found with productId: " + productId + ", quantity: " + quantity
 						+ " or end_date is already set.");
 			}
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException(e);
+			throw new PersistanceException(e.getMessage());
 		} finally {
 			ConnectionUtil.close(conn, stmt);
 		}
@@ -176,11 +212,12 @@ public class ProductPriceDAO {
 	 *
 	 * @return A 'Set' containing 'ProductPrice' objects representing details of all
 	 *         product price entries.
+	 * @throws PersistanceException 
 	 * @throws RuntimeException If an error occurs during the database retrieval
 	 *                          process. The original exception is printed, and a
 	 *                          RuntimeException is thrown.
 	 */
-	public Set<ProductPrice> findAll() {
+	public Set<ProductPrice> findAll() throws PersistanceException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -198,7 +235,7 @@ public class ProductPriceDAO {
 				productPrice.setProductId(rs.getInt("product_id"));
 				productPrice.setPrice(rs.getInt("price"));
 				productPrice.setQuantity(rs.getInt("quantity"));
-				productPrice.setType(QuantityType.valueOf(rs.getString("type")));
+				productPrice.setType(QuantityType.valueOf(rs.getString("type").toUpperCase()));
 				productPrice.setStartDate(rs.getTimestamp("start_date"));
 				productPrice.setEndDate(rs.getTimestamp("end_date") != null ? rs.getTimestamp("end_date") : null);
 
@@ -206,10 +243,10 @@ public class ProductPriceDAO {
 			}
 
 			return productPrices;
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException(e);
+			throw new PersistanceException(e.getMessage());
 		} finally {
 			ConnectionUtil.close(conn, stmt, rs);
 		}
@@ -232,11 +269,12 @@ public class ProductPriceDAO {
 	 *           entries are being retrieved.
 	 * @return A 'List' containing 'ProductPrice' objects representing details of
 	 *         product price entries associated with the given product ID.
+	 * @throws PersistanceException 
 	 * @throws RuntimeException If an error occurs during the database retrieval
 	 *                          process. The original exception is printed, and a
 	 *                          RuntimeException is thrown.
 	 */
-	public List<ProductPrice> findByProductId(int id) {
+	public List<ProductPrice> findByProductId(int id) throws PersistanceException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -264,10 +302,10 @@ public class ProductPriceDAO {
 			}
 
 			return productPrices;
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException(e);
+			throw new PersistanceException(e.getMessage());
 		} finally {
 			ConnectionUtil.close(conn, stmt, rs);
 		}
@@ -287,11 +325,12 @@ public class ProductPriceDAO {
 	 * @return A 'ProductPrice' object containing the data of the retrieved product
 	 *         price entry. Returns null if no matching product price entry is
 	 *         found.
+	 * @throws PersistanceException 
 	 * @throws RuntimeException If an error occurs during the database retrieval
 	 *                          process. The original exception is printed, and a
 	 *                          RuntimeException is thrown.
 	 */
-	public ProductPrice findById(int id) {
+	public ProductPrice findById(int id) throws PersistanceException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -317,10 +356,10 @@ public class ProductPriceDAO {
 			}
 
 			return productPrice;
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException(e);
+			throw new PersistanceException(e.getMessage());
 		} finally {
 			ConnectionUtil.close(conn, stmt, rs);
 		}
@@ -343,11 +382,12 @@ public class ProductPriceDAO {
 	 *                  product price entries are being retrieved.
 	 * @return A 'List' containing 'ProductPrice' objects representing details of
 	 *         current product price entries associated with the given product ID.
+	 * @throws PersistanceException 
 	 * @throws RuntimeException If an error occurs during the database retrieval
 	 *                          process. The original exception is printed, and a
 	 *                          RuntimeException is thrown.
 	 */
-	public List<ProductPrice> findCurrentPrice(int productId) {
+	public List<ProductPrice> findCurrentPrice(int productId) throws PersistanceException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -376,10 +416,10 @@ public class ProductPriceDAO {
 			}
 
 			return currentPrices;
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException(e);
+			throw new PersistanceException(e.getMessage());
 		} finally {
 			ConnectionUtil.close(conn, stmt, rs);
 		}

@@ -100,7 +100,7 @@ public class TestGetAllProducts {
 			productService.getByCategoryId(id);
 		});
 		
-		String expectedMessage = "Invalid Id";
+		String expectedMessage = "Invalid input id";
 		String actualMessage = exception.getMessage();
 
 		assertTrue(expectedMessage.equals(actualMessage));

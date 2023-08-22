@@ -3,9 +3,12 @@ package in.fssa.homebakery.service;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.HashSet;
 import java.util.Set;
 
 import in.fssa.homebakery.dao.UserDAO;
+import in.fssa.homebakery.exception.PersistanceException;
+import in.fssa.homebakery.exception.ServiceException;
 import in.fssa.homebakery.exception.ValidationException;
 import in.fssa.homebakery.model.User;
 import in.fssa.homebakery.util.ConnectionUtil;
@@ -26,9 +29,15 @@ public class UserService {
 	 */
 	public Set<User> getAll() {
 		UserDAO userDao = new UserDAO();
-		Set<User> userList = userDao.findAll();
-		for (User user : userList) {
-			System.out.println(user);
+		Set<User> userList = new HashSet<>();
+		try {
+			userList = userDao.findAll();
+			for (User user : userList) {
+				System.out.println(user);
+			}
+		} catch (PersistanceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return userList;
 	}
@@ -45,10 +54,15 @@ public class UserService {
 	 * @throws Exception If the provided user information is invalid or an error
 	 *                   occurs during database interaction.
 	 */
-	public void create(User newUser) throws Exception {
+	public void create(User newUser) throws ValidationException {
 		UserDAO userDao = new UserDAO();
-		UserValidator.validate(newUser);
-		userDao.create(newUser);
+		try {
+			UserValidator.validate(newUser);
+			userDao.create(newUser);
+		} catch (PersistanceException e) {
+			e.printStackTrace();
+			throw new ServiceException(e.getMessage());
+		}
 	}
 
 	/**
@@ -103,7 +117,11 @@ public class UserService {
 			throw new RuntimeException("User does not exist");
 		}
 		UserDAO userDao = new UserDAO();
-		userDao.delete(userId);
+		try {
+			userDao.delete(userId);
+		} catch (PersistanceException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -129,7 +147,15 @@ public class UserService {
 		}
 
 		UserDAO userDao = new UserDAO();
-		return userDao.findById(userId);
+		User user = null;
+		try {
+			user =  userDao.findById(userId);
+		} catch (PersistanceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return user;
 	}
 
 	/**

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
+import in.fssa.homebakery.exception.PersistanceException;
 import in.fssa.homebakery.interface_files.CategoryInterface;
 import in.fssa.homebakery.model.Category;
 import in.fssa.homebakery.util.ConnectionUtil;
@@ -31,9 +32,10 @@ public class CategoryDAO implements CategoryInterface {
 	 * @param updatedCategory An instance of the 'Category' class containing the
 	 *                        updated category information. It should have the
 	 *                        updated category name.
+	 * @throws PersistanceException
 	 */
 	@Override
-	public void update(int id, Category updatedCategory) {
+	public void update(int id, Category updatedCategory) throws PersistanceException {
 		Connection conn = null;
 		PreparedStatement ps = null;
 
@@ -47,10 +49,10 @@ public class CategoryDAO implements CategoryInterface {
 			ps.executeUpdate();
 
 			System.out.println("Category has been successfully updated");
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException();
+			throw new PersistanceException(e.getMessage());
 		} finally {
 			ConnectionUtil.close(conn, ps);
 		}
@@ -81,12 +83,13 @@ public class CategoryDAO implements CategoryInterface {
 	 *
 	 * @return A 'Set' containing all the retrieved 'Category' objects from the
 	 *         database.
+	 * @throws PersistanceException 
 	 * @throws RuntimeException If an error occurs during the database retrieval
 	 *                          process. The original exception is printed, and a
 	 *                          RuntimeException is thrown.
 	 */
 	@Override
-	public Set<Category> findAll() {
+	public Set<Category> findAll() throws PersistanceException {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		Set<Category> setOfCategory = new HashSet<>();
@@ -108,7 +111,7 @@ public class CategoryDAO implements CategoryInterface {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException();
+			throw new PersistanceException(e.getMessage());
 		} finally {
 			ConnectionUtil.close(conn, ps, rs);
 		}
@@ -128,12 +131,13 @@ public class CategoryDAO implements CategoryInterface {
 	 * @param id The ID of the category to be retrieved.
 	 * @return A 'Category' object containing the data of the retrieved category.
 	 *         Returns null if no matching category is found.
+	 * @throws PersistanceException 
 	 * @throws RuntimeException If an error occurs during the database retrieval
 	 *                          process. The original exception is printed, and a
 	 *                          RuntimeException is thrown.
 	 */
 	@Override
-	public Category findById(int id) {
+	public Category findById(int id) throws PersistanceException {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		Category category = null;
@@ -157,7 +161,7 @@ public class CategoryDAO implements CategoryInterface {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException(e);
+			throw new PersistanceException(e.getMessage());
 		} finally {
 			ConnectionUtil.close(conn, ps, rs);
 		}

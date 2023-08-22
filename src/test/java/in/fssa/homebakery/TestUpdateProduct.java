@@ -18,7 +18,7 @@ public class TestUpdateProduct {
 		ProductService productService = new ProductService();
 
 		Product product = new Product();
-		int id = 2;
+		int id = 4;
 		product.setProductName("Banana cake");
 		product.setDescription("You can sleep very good");
 		product.setCategoryId(3);
@@ -80,7 +80,7 @@ public class TestUpdateProduct {
 		ProductService productService = new ProductService();
 
 		Product product = new Product();
-		int id = 2;
+		int id = 3;
 		product.setProductName("Banana cake");
 		product.setDescription("You can sleep very good");
 		product.setCategoryId(-4);
@@ -102,7 +102,7 @@ public class TestUpdateProduct {
 		ProductService productService = new ProductService();
 
 		Product product = new Product();
-		int id = 2;
+		int id = 3;
 		product.setProductName(null);
 		product.setDescription("You can sleep very good");
 		product.setCategoryId(3);
@@ -124,7 +124,7 @@ public class TestUpdateProduct {
 		ProductService productService = new ProductService();
 
 		Product product = new Product();
-		int id = 2;
+		int id = 3;
 		product.setProductName("Banana cake");
 		product.setDescription(null);
 		product.setCategoryId(3);

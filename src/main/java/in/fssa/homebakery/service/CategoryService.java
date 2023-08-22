@@ -3,9 +3,11 @@ package in.fssa.homebakery.service;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.HashSet;
 import java.util.Set;
 
 import in.fssa.homebakery.dao.CategoryDAO;
+import in.fssa.homebakery.exception.PersistanceException;
 import in.fssa.homebakery.model.Category;
 import in.fssa.homebakery.util.ConnectionUtil;
 import in.fssa.homebakery.validator.CategoryValidator;
@@ -90,7 +92,12 @@ public class CategoryService {
 	public Set<Category> getAll() {
 		CategoryDAO categoryDAO = new CategoryDAO();
 
-		Set<Category> categoryList = categoryDAO.findAll();
+		Set<Category> categoryList = new HashSet<>();
+		try {
+			categoryList = categoryDAO.findAll();
+		} catch (PersistanceException e) {
+			e.printStackTrace();
+		}
 
 		return categoryList;
 	}

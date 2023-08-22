@@ -21,7 +21,7 @@ public class UserValidator {
 	 * @throws ValidationException If the provided User object or its properties are
 	 *                             invalid.
 	 */
-	public static void validate(User user) throws Exception {
+	public static void validate(User user) throws ValidationException {
 
 		Pattern email_pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
 

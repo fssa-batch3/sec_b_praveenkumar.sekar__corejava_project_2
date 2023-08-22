@@ -18,10 +18,11 @@ public class ConnectionUtil {
 	 * environment variables.
 	 * 
 	 * @return A database connection instance.
+	 * @throws SQLException 
 	 * @throws RuntimeException If an error occurs while establishing the
 	 *                          connection.
 	 */
-	public static Connection getConnection() {
+	public static Connection getConnection() throws SQLException {
 
 
 
@@ -45,9 +46,9 @@ public class ConnectionUtil {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			connection = DriverManager.getConnection(url, userName, passWord);
 
-		} catch (Exception e) {
+		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
-			throw new RuntimeException(e);
+			throw new SQLException(e);
 		}
 
 		return connection;
@@ -72,7 +73,7 @@ public class ConnectionUtil {
 				connection.close();
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 	}
 
@@ -99,7 +100,7 @@ public class ConnectionUtil {
 				connection.close();
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 	}
 
