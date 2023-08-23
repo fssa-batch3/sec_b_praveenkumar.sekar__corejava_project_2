@@ -36,7 +36,6 @@ public class UserService {
 				System.out.println(user);
 			}
 		} catch (PersistanceException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return userList;
@@ -58,6 +57,11 @@ public class UserService {
 		UserDAO userDao = new UserDAO();
 		try {
 			UserValidator.validate(newUser);
+			boolean check = userDao.isUserEmailPresent(newUser.getEmail());
+			
+			if(check) {
+				throw new RuntimeException("An account with the email already exists");
+			}
 			userDao.create(newUser);
 		} catch (PersistanceException e) {
 			e.printStackTrace();
@@ -85,7 +89,7 @@ public class UserService {
 
 		IntUtil.rejectIfInvalidInt(id);
 
-		boolean check = isUserPresent(id);
+		boolean check = UserDAO.isUserPresent(id);
 
 		if (!check) {
 			throw new RuntimeException("User does not exist");
@@ -104,14 +108,15 @@ public class UserService {
 	 * 
 	 * @param userId The ID of the user to be deleted.
 	 * @throws ValidationException If the provided user ID is invalid.
+	 * @throws PersistanceException 
 	 * @throws RuntimeException    If the user does not exist or an error occurs
 	 *                             during database interaction.
 	 */
-	public void delete(int userId) throws ValidationException {
+	public void delete(int userId) throws ValidationException, PersistanceException {
 
 		IntUtil.rejectIfInvalidInt(userId);
 
-		boolean check = isUserPresent(userId);
+		boolean check = UserDAO.isUserPresent(userId);
 
 		if (!check) {
 			throw new RuntimeException("User does not exist");
@@ -134,13 +139,14 @@ public class UserService {
 	 * @param userId The ID of the user to be retrieved.
 	 * @return The retrieved user.
 	 * @throws ValidationException If the provided user ID is invalid.
+	 * @throws PersistanceException 
 	 * @throws RuntimeException    If the user does not exist or an error occurs
 	 *                             during database interaction.
 	 */
-	public User findById(int userId) throws ValidationException {
+	public User findById(int userId) throws ValidationException, PersistanceException {
 		IntUtil.rejectIfInvalidInt(userId);
 
-		boolean check = isUserPresent(userId);
+		boolean check = UserDAO.isUserPresent(userId);
 
 		if (!check) {
 			throw new RuntimeException("User does not exist");
@@ -151,50 +157,10 @@ public class UserService {
 		try {
 			user =  userDao.findById(userId);
 		} catch (PersistanceException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		return user;
-	}
-
-	/**
-	 * Checks if a user with the provided user ID exists in the database.
-	 *
-	 * This method determines whether a user with the given user ID exists in the
-	 * database. It queries the database and returns a boolean value indicating the
-	 * presence of the user.
-	 * 
-	 * @param id The ID of the user to be checked.
-	 * @return True if the user with the provided ID exists, otherwise false.
-	 * @throws RuntimeException If an error occurs during database interaction.
-	 */
-	public boolean isUserPresent(int id) {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-
-		try {
-			conn = ConnectionUtil.getConnection();
-			String query = "SELECT COUNT(*) FROM users WHERE id = ?";
-			stmt = conn.prepareStatement(query);
-			stmt.setInt(1, id);
-
-			rs = stmt.executeQuery();
-
-			if (rs.next()) {
-				int count = rs.getInt(1);
-				return count > 0;
-			}
-
-			return false;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		} finally {
-			ConnectionUtil.close(conn, stmt, rs);
-		}
 	}
 
 }

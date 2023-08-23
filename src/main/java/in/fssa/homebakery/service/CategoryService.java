@@ -35,13 +35,13 @@ public class CategoryService {
 	 */
 	public Category findById(int categoryId) throws Exception {
 		CategoryValidator.validateId(categoryId);
-		boolean test = categoryExists(categoryId);
+		CategoryDAO categoryDao = new CategoryDAO();
+		boolean test = CategoryDAO.categoryExists(categoryId);
 
 		if (!test) {
 			throw new RuntimeException("Category does not exist");
 		}
 
-		CategoryDAO categoryDao = new CategoryDAO();
 		return categoryDao.findById(categoryId);
 	}
 
@@ -67,14 +67,14 @@ public class CategoryService {
 	 */
 	public void update(int id, Category updatedCategory) throws Exception {
 		CategoryValidator.validateId(id);
+		CategoryDAO categoryDao = new CategoryDAO();
 
-		boolean test = categoryExists(id);
+		boolean test = CategoryDAO.categoryExists(id);
 
 		if (!test) {
 			throw new RuntimeException("Category does not exist");
 		}
 
-		CategoryDAO categoryDao = new CategoryDAO();
 		categoryDao.update(2, updatedCategory);
 
 	}
@@ -100,45 +100,5 @@ public class CategoryService {
 		}
 
 		return categoryList;
-	}
-
-	/**
-	 * Checks if a category with the given ID exists in the database.
-	 *
-	 * This method queries the database to check if a category with the provided
-	 * 'categoryId' exists in the 'categories' table. If a category with the given
-	 * ID is found, the method returns 'true'. Otherwise, it returns 'false'.
-	 *
-	 * @param categoryId The ID of the category to check for existence.
-	 * @return 'true' if a category with the provided ID exists in the database,
-	 *         'false' otherwise.
-	 * @throws RuntimeException If an error occurs during the database query
-	 *                          process. The original exception is printed, and a
-	 *                          RuntimeException is thrown.
-	 */
-	public boolean categoryExists(int categoryId) {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-
-		try {
-			String query = "SELECT COUNT(*) FROM categories WHERE id = ?";
-			conn = ConnectionUtil.getConnection();
-			stmt = conn.prepareStatement(query);
-			stmt.setInt(1, categoryId);
-
-			rs = stmt.executeQuery();
-			if (rs.next()) {
-				int count = rs.getInt(1);
-				return count > 0; // If count > 0, category exists
-			}
-
-			return false; // No rows returned, category does not exist
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		} finally {
-			ConnectionUtil.close(conn, stmt, rs);
-		}
 	}
 }

@@ -137,7 +137,7 @@ public class TestGetAllProductPrices {
 	public void testGetCurrentPriceByNonExistingProductId() {
 		ProductPriceService productPriceService = new ProductPriceService();
 
-		int id = 35;
+		int id = 99;
 		
 		Exception exception = assertThrows(RuntimeException.class, () -> {
 			productPriceService.findCurrentPrice(id);

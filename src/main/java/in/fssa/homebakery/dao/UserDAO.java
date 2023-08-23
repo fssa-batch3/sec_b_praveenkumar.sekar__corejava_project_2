@@ -248,5 +248,85 @@ public class UserDAO implements UserInterface {
 		}
 		return user;
 	}
+	
+	/**
+	 * Checks if a user with the provided user ID exists in the database.
+	 *
+	 * This method determines whether a user with the given user ID exists in the
+	 * database. It queries the database and returns a boolean value indicating the
+	 * presence of the user.
+	 * 
+	 * @param id The ID of the user to be checked.
+	 * @return True if the user with the provided ID exists, otherwise false.
+	 * @throws PersistanceException 
+	 * @throws RuntimeException If an error occurs during database interaction.
+	 */
+	public static boolean isUserPresent(int id) throws PersistanceException {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 
+		try {
+			conn = ConnectionUtil.getConnection();
+			String query = "SELECT COUNT(*) FROM users WHERE id = ?";
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, id);
+
+			rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				int count = rs.getInt(1);
+				return count > 0;
+			}
+
+			return false;
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			throw new PersistanceException(e.getMessage());
+		} finally {
+			ConnectionUtil.close(conn, stmt, rs);
+		}
+	}
+	
+	
+	/**
+	 * Checks if a user with the provided user ID exists in the database.
+	 *
+	 * This method determines whether a user with the given user ID exists in the
+	 * database. It queries the database and returns a boolean value indicating
+	 * the presence of the user.
+	 *
+	 * @param id The ID of the user to be checked.
+	 * @return {@code true} if the user with the provided ID exists in the database, {@code false} otherwise.
+	 * @throws PersistanceException If an SQL exception occurs while interacting with the database.
+	 * @throws RuntimeException If an error occurs during database interaction.
+	 */
+	public boolean isUserEmailPresent(String email) throws PersistanceException {
+	    Connection conn = null;
+	    PreparedStatement stmt = null;
+	    ResultSet rs = null;
+
+	    try {
+	        conn = ConnectionUtil.getConnection();
+	        String query = "SELECT COUNT(*) FROM users WHERE email = ?";
+	        stmt = conn.prepareStatement(query);
+	        stmt.setString(1, email);
+
+	        rs = stmt.executeQuery();
+
+	        if (rs.next()) {
+	            int count = rs.getInt(1);
+	            return count > 0;
+	        }
+
+	        return false;
+
+	    } catch (SQLException e) {
+	        System.out.println(e.getMessage());
+	        throw new PersistanceException(e.getMessage());
+	    } finally {
+	        ConnectionUtil.close(conn, stmt, rs);
+	    }
+	}
 }

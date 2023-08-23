@@ -1,11 +1,9 @@
 package in.fssa.homebakery.service;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Set;
 
+import in.fssa.homebakery.dao.CategoryDAO;
 import in.fssa.homebakery.dao.ProductDAO;
 import in.fssa.homebakery.dao.ProductPriceDAO;
 import in.fssa.homebakery.dto.ProductDetailDTO;
@@ -13,7 +11,6 @@ import in.fssa.homebakery.exception.PersistanceException;
 import in.fssa.homebakery.exception.ValidationException;
 import in.fssa.homebakery.model.Product;
 import in.fssa.homebakery.model.ProductPrice;
-import in.fssa.homebakery.util.ConnectionUtil;
 import in.fssa.homebakery.util.IntUtil;
 import in.fssa.homebakery.validator.CategoryValidator;
 import in.fssa.homebakery.validator.ProductValidator;
@@ -46,18 +43,24 @@ public class ProductService {
 	 *                   exception type and message depend on the underlying
 	 *                   validation and insertion logic.
 	 */
-	public void create(ProductDetailDTO newProduct) throws Exception {
+	public void create(ProductDetailDTO newProduct) {
 
 		ProductDAO productDao = new ProductDAO();
 		ProductPriceDAO productPriceDao = new ProductPriceDAO();
 
-		ProductValidator.validate(newProduct);
-		ProductValidator.validatePriceList(newProduct.getPrices());
-
-		int id = productDao.create(newProduct);
-
-		for (ProductPrice newPrice : newProduct.getPrices()) {
-			productPriceDao.create(newPrice, id);
+		try {
+			ProductValidator.validate(newProduct);
+			ProductValidator.validatePriceList(newProduct.getPrices());
+			int id = productDao.create(newProduct);
+			
+			for (ProductPrice newPrice : newProduct.getPrices()) {
+				productPriceDao.create(newPrice, id);
+			}
+		} catch (PersistanceException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
@@ -78,20 +81,25 @@ public class ProductService {
 	 * @throws RuntimeException If the specified product does not exist or if an
 	 *                          error occurs during the deletion process.
 	 */
-	public void delete(int id) throws ValidationException, PersistanceException {
+	public void delete(int id) throws PersistanceException {
 		ProductDAO productDao = new ProductDAO();
 		ProductPriceDAO productPriceDao = new ProductPriceDAO();
 		
-		IntUtil.rejectIfInvalidInt(id);
-
-		boolean test = productExists(id);
-
-		if (!test) {
-			throw new RuntimeException("Product does not exist");
+		try {
+			IntUtil.rejectIfInvalidInt(id);
+			boolean test = ProductDAO.productExists(id);
+			
+			if (!test) {
+				throw new RuntimeException("Product does not exist");
+			}
+			
+			productDao.delete(id);
+			productPriceDao.delete(id);
+		} catch (ValidationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
-		productDao.delete(id);
-		productPriceDao.delete(id);
 	}
 
 	/**
@@ -145,7 +153,7 @@ public class ProductService {
 	    
 	    IntUtil.rejectIfInvalidInt(id);
 	    
-	    boolean test = productExists(id);
+	    boolean test = ProductDAO.productExists(id);
 
 		if (!test) {
 			throw new RuntimeException("Product does not exist");
@@ -180,8 +188,7 @@ public class ProductService {
 	    
 	    CategoryValidator.validateId(categoryId);
 	    
-	    CategoryService catService = new CategoryService();
-	    boolean test = catService.categoryExists(categoryId);
+	    boolean test = CategoryDAO.categoryExists(categoryId);
 	    
 	    if (!test) {
 			throw new RuntimeException("Category does not exist");
@@ -222,7 +229,7 @@ public class ProductService {
 	public void update(int id, Product newProduct) throws Exception {
 		IntUtil.rejectIfInvalidInt(id);
 
-		boolean test = productExists(id);
+		boolean test = ProductDAO.productExists(id);
 
 		if (!test) {
 			throw new RuntimeException("Product does not exist");
@@ -232,48 +239,6 @@ public class ProductService {
 
 		ProductDAO productDAO = new ProductDAO();
 		productDAO.update(id, newProduct);
-	}
-
-	/**
-	 * Checks if a product with the specified product ID exists and is active.
-	 *
-	 * This method queries the database to check if a product with the given
-	 * 'productId' exists and is marked as active.
-	 * 
-	 * If a product matching the ID and active status is found, the method returns
-	 * 'true', indicating that the product exists. If no such product is found, the
-	 * method returns 'false'.
-	 * 
-	 * @param productId The ID of the product to check.
-	 * @return 'true' if a product with the specified ID exists and is active,
-	 *         'false' otherwise.
-	 * @throws RuntimeException If an error occurs while querying the database.
-	 */
-	public boolean productExists(int productId) {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-
-		try {
-			String query = "SELECT COUNT(*) FROM products WHERE id = ? AND is_active = ?";
-			conn = ConnectionUtil.getConnection();
-			stmt = conn.prepareStatement(query);
-			stmt.setInt(1, productId);
-			stmt.setInt(2, 1);
-
-			rs = stmt.executeQuery();
-			if (rs.next()) {
-				int count = rs.getInt(1);
-				return count > 0;
-			}
-
-			return false; // No rows returned, product does not exist
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		} finally {
-			ConnectionUtil.close(conn, stmt, rs);
-		}
 	}
 
 }

@@ -1,16 +1,13 @@
 package in.fssa.homebakery.service;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Set;
 
+import in.fssa.homebakery.dao.ProductDAO;
 import in.fssa.homebakery.dao.ProductPriceDAO;
 import in.fssa.homebakery.exception.PersistanceException;
 import in.fssa.homebakery.exception.ValidationException;
 import in.fssa.homebakery.model.ProductPrice;
-import in.fssa.homebakery.util.ConnectionUtil;
 import in.fssa.homebakery.util.IntUtil;
 import in.fssa.homebakery.validator.PriceValidator;
 
@@ -48,19 +45,17 @@ public class ProductPriceService {
 	 *                   logic.
 	 */
 	public void update(int id, ProductPrice productPrice, double quantity) throws Exception {
-		ProductService productService = new ProductService();
 
 		IntUtil.rejectIfInvalidInt(id);
 		PriceValidator.validate(productPrice);
 		PriceValidator.validateQuantity(quantity);
 
-		boolean test = productService.productExists(id);
-
+		boolean test = ProductDAO.productExists(id);
 		if (!test) {
 			throw new RuntimeException("Product does not exist");
 		}
 
-		boolean check = quantityExistsForProduct(id, quantity);
+		boolean check = ProductPriceDAO.quantityExistsForProduct(id, quantity);
 
 		if (!check) {
 			throw new RuntimeException("Quantity does not exist");
@@ -120,8 +115,7 @@ public class ProductPriceService {
 	 */
 	public List<ProductPrice> findByProductId(int id) throws Exception {
 		IntUtil.rejectIfInvalidInt(id);
-		ProductService productService = new ProductService();
-		boolean test = productService.productExists(id);
+		boolean test = ProductDAO.productExists(id);
 
 		if (!test) {
 			throw new RuntimeException("Product does not exist");
@@ -185,8 +179,7 @@ public class ProductPriceService {
 	 */
 	public List<ProductPrice> findCurrentPrice(int productId) throws Exception {
 		IntUtil.rejectIfInvalidInt(productId);
-		ProductService productService = new ProductService();
-		boolean test = productService.productExists(productId);
+		boolean test = ProductDAO.productExists(productId);
 
 		if (!test) {
 			throw new RuntimeException("Product does not exist");
@@ -199,52 +192,6 @@ public class ProductPriceService {
 			System.out.println(price);
 		}
 		return priceList;
-	}
-
-	/**
-	 * Checks if a specific quantity exists for a given product ID.
-	 *
-	 * This method checks whether a product price entry with the provided
-	 * 'productId' and 'quantity' exists in the database. It uses the 'productId'
-	 * and 'quantity' parameters to query the database and determine if such an
-	 * entry exists.
-	 *
-	 * If an entry with the provided 'productId' and 'quantity' is found, the method
-	 * returns 'true', indicating that the quantity exists. If no matching entry is
-	 * found, the method returns 'false', indicating that the quantity does not
-	 * exist.
-	 *
-	 * @param productId The ID of the product to check for.
-	 * @param quantity  The quantity to check for.
-	 * @return 'true' if a product price entry with the specified 'productId' and
-	 *         'quantity' exists, 'false' otherwise.
-	 */
-	public boolean quantityExistsForProduct(int productId, double quantity) {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-
-		try {
-			String query = "SELECT COUNT(*) FROM product_prices WHERE product_id = ? AND quantity = ?";
-			conn = ConnectionUtil.getConnection();
-			stmt = conn.prepareStatement(query);
-			stmt.setInt(1, productId);
-			stmt.setDouble(2, quantity);
-
-			rs = stmt.executeQuery();
-			if (rs.next()) {
-				int count = rs.getInt(1);
-				return count > 0; // If count > 0, product with quantity for the specified product ID exists
-			}
-
-			return false; // No rows returned, product with quantity for the specified product ID does not
-							// exist
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		} finally {
-			ConnectionUtil.close(conn, stmt, rs);
-		}
 	}
 
 }

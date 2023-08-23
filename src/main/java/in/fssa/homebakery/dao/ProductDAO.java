@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 import in.fssa.homebakery.dto.ProductDetailDTO;
+import in.fssa.homebakery.exception.PersistanceException;
 import in.fssa.homebakery.interface_files.ProductInterface;
 import in.fssa.homebakery.model.Product;
 import in.fssa.homebakery.util.ConnectionUtil;
@@ -30,11 +31,12 @@ public class ProductDAO {
 	 *                   product information. It should have the updated product
 	 *                   name, description, category ID, and boolean values
 	 *                   indicating whether the product is vegetarian and active.
+	 * @throws PersistanceException 
 	 * @throws RuntimeException If an error occurs during the database update
 	 *                          process. The original exception is printed, and a
 	 *                          RuntimeException is thrown.
 	 */
-	public void update(int id, Product newProduct) {
+	public void update(int id, Product newProduct) throws PersistanceException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 
@@ -54,9 +56,9 @@ public class ProductDAO {
 
 			System.out.println("Product with ID " + id + " has been successfully updated");
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			throw new PersistanceException(e.getMessage());
 		} finally {
 			ConnectionUtil.close(conn, stmt);
 		}
@@ -74,11 +76,12 @@ public class ProductDAO {
 	 * and a RuntimeException is thrown.
 	 *
 	 * @param id The ID of the product to be deactivated.
+	 * @throws PersistanceException 
 	 * @throws RuntimeException If an error occurs during the database update
 	 *                          process. The original exception is printed, and a
 	 *                          RuntimeException is thrown.
 	 */
-	public void delete(int id) {
+	public void delete(int id) throws PersistanceException {
 		Connection conn = null;
 		PreparedStatement ps = null;
 
@@ -92,10 +95,10 @@ public class ProductDAO {
 			ps.executeUpdate();
 
 			System.out.println("Product has been successfully deactivated");
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException();
+			throw new PersistanceException(e.getMessage());
 		} finally {
 			ConnectionUtil.close(conn, ps);
 		}
@@ -114,11 +117,12 @@ public class ProductDAO {
 	 *
 	 * @return A 'Set' containing 'ProductDetailDTO' objects representing details of
 	 *         all active products.
+	 * @throws PersistanceException 
 	 * @throws RuntimeException If an error occurs during the database retrieval
 	 *                          process. The original exception is printed, and a
 	 *                          RuntimeException is thrown.
 	 */
-	public Set<ProductDetailDTO> findAll() {
+	public Set<ProductDetailDTO> findAll() throws PersistanceException {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		Set<ProductDetailDTO> setOfUser = new HashSet<>();
@@ -144,7 +148,7 @@ public class ProductDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException();
+			throw new PersistanceException(e.getMessage());
 		} finally {
 			ConnectionUtil.close(conn, ps, rs);
 		}
@@ -166,11 +170,12 @@ public class ProductDAO {
 	 * @param id The ID of the active product to be retrieved.
 	 * @return A 'Product' object containing the data of the retrieved active
 	 *         product. Returns null if no matching active product is found.
+	 * @throws PersistanceException 
 	 * @throws RuntimeException If an error occurs during the database retrieval
 	 *                          process. The original exception is printed, and a
 	 *                          RuntimeException is thrown.
 	 */
-	public ProductDetailDTO findById(int id) {
+	public ProductDetailDTO findById(int id) throws PersistanceException {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ProductDetailDTO product = null;
@@ -198,7 +203,7 @@ public class ProductDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException();
+			throw new PersistanceException(e.getMessage());
 		} finally {
 			ConnectionUtil.close(conn, ps, rs);
 		}
@@ -222,11 +227,12 @@ public class ProductDAO {
 	 * @return A list of 'Product' objects containing the data of the retrieved
 	 *         active products for the specified category. Returns an empty list if
 	 *         no matching active products are found.
+	 * @throws PersistanceException 
 	 * @throws RuntimeException If an error occurs during the database retrieval
 	 *                          process. The original exception is printed, and a
 	 *                          RuntimeException is thrown.
 	 */
-	public List<ProductDetailDTO> findByCategoryId(int categoryId) {
+	public List<ProductDetailDTO> findByCategoryId(int categoryId) throws PersistanceException {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		List<ProductDetailDTO> productList = new ArrayList<>();
@@ -255,7 +261,7 @@ public class ProductDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException();
+			throw new PersistanceException(e.getMessage());
 		} finally {
 			ConnectionUtil.close(conn, ps, rs);
 		}
@@ -278,11 +284,12 @@ public class ProductDAO {
 	 *                         vegetarian and active.
 	 * @return The ID of the newly created product. Returns -1 if an error occurs
 	 *         during the database insertion.
+	 * @throws PersistanceException 
 	 * @throws RuntimeException If an error occurs during the database insertion
 	 *                          process. The original exception is printed, and a
 	 *                          RuntimeException is thrown.
 	 */
-	public int create(ProductDetailDTO productDetailDto) {
+	public int create(ProductDetailDTO productDetailDto) throws PersistanceException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		int productId = -1;
@@ -306,14 +313,57 @@ public class ProductDAO {
 				productId = generatedKeys.getInt(1);
 			}
 
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException(e);
+			throw new PersistanceException(e.getMessage());
 		} finally {
 			ConnectionUtil.close(conn, stmt);
 		}
 		return productId;
+	}
+	
+	/**
+	 * Checks if a product with the specified product ID exists and is active.
+	 *
+	 * This method queries the database to check if a product with the given
+	 * 'productId' exists and is marked as active.
+	 * 
+	 * If a product matching the ID and active status is found, the method returns
+	 * 'true', indicating that the product exists. If no such product is found, the
+	 * method returns 'false'.
+	 * 
+	 * @param productId The ID of the product to check.
+	 * @return 'true' if a product with the specified ID exists and is active,
+	 *         'false' otherwise.
+	 * @throws PersistanceException 
+	 * @throws RuntimeException If an error occurs while querying the database.
+	 */
+	public static boolean productExists(int productId) throws PersistanceException {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			String query = "SELECT COUNT(*) FROM products WHERE id = ? AND is_active = ?";
+			conn = ConnectionUtil.getConnection();
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, productId);
+			stmt.setInt(2, 1);
+
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				int count = rs.getInt(1);
+				return count > 0;
+			}
+
+			return false; // No rows returned, product does not exist
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			throw new PersistanceException(e.getMessage());
+		} finally {
+			ConnectionUtil.close(conn, stmt, rs);
+		}
 	}
 
 }

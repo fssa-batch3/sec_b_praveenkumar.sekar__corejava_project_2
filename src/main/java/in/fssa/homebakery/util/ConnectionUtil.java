@@ -8,6 +8,8 @@ import java.sql.SQLException;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
+//import io.github.cdimascio.dotenv.Dotenv;
+
 public class ConnectionUtil {
 
 	/**
@@ -40,6 +42,7 @@ public class ConnectionUtil {
             url = env.get("DATABASE_HOSTNAME");
             userName = env.get("DATABASE_USERNAME");
             passWord = env.get("DATABASE_PASSWORD");
+        		
         }
 
 		try {

@@ -8,6 +8,19 @@ import in.fssa.homebakery.util.StringUtil;
 
 public class UserValidator {
 
+	private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+
+	private static final Pattern pattern1 = Pattern.compile(EMAIL_PATTERN);
+
+	private static final String PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+
+	private static final Pattern pattern2 = Pattern.compile(PASSWORD_PATTERN);
+
+	private static final String NAME_PATTERN = "^[A-Za-z]+(?: [A-Za-z]+)*$";
+
+	private static final Pattern pattern3 = Pattern.compile(NAME_PATTERN);
+
 	/**
 	 * Validates a User object to ensure its properties are valid.
 	 *
@@ -23,11 +36,6 @@ public class UserValidator {
 	 */
 	public static void validate(User user) throws ValidationException {
 
-		Pattern email_pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
-
-		Pattern passwordPattern = Pattern
-				.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$");
-
 		if (user == null) {
 			throw new ValidationException("Invalid user input");
 		}
@@ -36,8 +44,30 @@ public class UserValidator {
 		StringUtil.rejectIfInvalidString(user.getPassword(), "Password");
 		StringUtil.rejectIfInvalidString(user.getFirstName(), "First Name");
 
-		if (!email_pattern.matcher(user.getEmail()).matches()) {
-			throw new ValidationException("Email does not match the pattern");
+		if (!pattern1.matcher(user.getEmail()).matches()) {
+			throw new ValidationException(
+					"Invalid email format. Please provide an email address with the following conditions:\n"
+							+ "- Should follow the standard email format (e.g., user@example.com)\n"
+							+ "- Should contain only letters, numbers, and special characters (@, .)\n"
+							+ "- Should have a valid domain name and top-level domain (e.g., .com, .org)");
+		}
+
+		if (!pattern2.matcher(user.getPassword()).matches()) {
+			throw new ValidationException(
+					"Invalid password format. Please provide a password with the following conditions:\n"
+							+ "- Should be at least 8 characters long\n"
+							+ "- Should contain at least one lowercase letter\n"
+							+ "- Should contain at least one uppercase letter\n"
+							+ "- Should contain at least one digit\n"
+							+ "- Should contain at least one special character (@, $, !, %, *, ?, &)");
+		}
+
+		if (!pattern3.matcher(user.getFirstName()).matches()) {
+			throw new ValidationException("Name should only contain alphabets and be seprated by only one space");
+		}
+
+		if (!pattern3.matcher(user.getLastName()).matches()) {
+			throw new ValidationException("Name should only contain alphabets and be seprated by only one space");
 		}
 
 		if (user.getPhoneNo() < 6000000000l || user.getPhoneNo() > 9999999999l) {

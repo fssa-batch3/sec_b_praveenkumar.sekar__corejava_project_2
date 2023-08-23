@@ -167,5 +167,46 @@ public class CategoryDAO implements CategoryInterface {
 		}
 		return category;
 	}
+	
+	/**
+	 * Checks if a category with the given ID exists in the database.
+	 *
+	 * This method queries the database to check if a category with the provided
+	 * 'categoryId' exists in the 'categories' table. If a category with the given
+	 * ID is found, the method returns 'true'. Otherwise, it returns 'false'.
+	 *
+	 * @param categoryId The ID of the category to check for existence.
+	 * @return 'true' if a category with the provided ID exists in the database,
+	 *         'false' otherwise.
+	 * @throws PersistanceException 
+	 * @throws RuntimeException If an error occurs during the database query
+	 *                          process. The original exception is printed, and a
+	 *                          RuntimeException is thrown.
+	 */
+	public static boolean categoryExists(int categoryId) throws PersistanceException {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			String query = "SELECT COUNT(*) FROM categories WHERE id = ?";
+			conn = ConnectionUtil.getConnection();
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, categoryId);
+
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				int count = rs.getInt(1);
+				return count > 0; // If count > 0, category exists
+			}
+
+			return false; // No rows returned, category does not exist
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			throw new PersistanceException(e.getMessage());
+		} finally {
+			ConnectionUtil.close(conn, stmt, rs);
+		}
+	}
 
 }
