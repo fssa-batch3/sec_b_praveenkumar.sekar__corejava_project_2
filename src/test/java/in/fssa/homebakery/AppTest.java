@@ -6,7 +6,7 @@ public class AppTest {
 
 	public static void main(String[] args) {
 		UserService service = new UserService();
-		service.getAll(); 
+		service.getAllUsers(); 
 	}
 
 }

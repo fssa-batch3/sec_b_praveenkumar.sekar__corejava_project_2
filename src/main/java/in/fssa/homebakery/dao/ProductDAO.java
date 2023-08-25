@@ -11,7 +11,7 @@ import java.util.Set;
 
 import in.fssa.homebakery.dto.ProductDetailDTO;
 import in.fssa.homebakery.exception.PersistanceException;
-import in.fssa.homebakery.interface_files.ProductInterface;
+import in.fssa.homebakery.interfaces.ProductInterface;
 import in.fssa.homebakery.model.Product;
 import in.fssa.homebakery.util.ConnectionUtil;
 
@@ -129,7 +129,7 @@ public class ProductDAO {
 		ResultSet rs = null;
 
 		try {
-			String query = "SELECT * FROM products WHERE is_active = 1";
+			String query = "SELECT id, product_name, description, category_id, is_veg FROM products WHERE is_active = 1";
 			conn = ConnectionUtil.getConnection();
 			ps = conn.prepareStatement(query);
 			rs = ps.executeQuery();
@@ -182,7 +182,7 @@ public class ProductDAO {
 		ResultSet rs = null;
 
 		try {
-			String query = "SELECT * FROM products WHERE is_active = 1 AND id = ?";
+			String query = "SELECT id, product_name, description, category_id, is_veg FROM products WHERE is_active = 1 AND id = ?";
 			conn = ConnectionUtil.getConnection();
 			ps = conn.prepareStatement(query);
 
@@ -239,7 +239,7 @@ public class ProductDAO {
 		ResultSet rs = null;
 
 		try {
-			String query = "SELECT * FROM products WHERE is_active = 1 AND category_id = ?";
+			String query = "SELECT id, product_name, description, category_id, is_veg FROM products WHERE is_active = 1 AND category_id = ?";
 			conn = ConnectionUtil.getConnection();
 			ps = conn.prepareStatement(query);
 
@@ -345,7 +345,7 @@ public class ProductDAO {
 		ResultSet rs = null;
 
 		try {
-			String query = "SELECT COUNT(*) FROM products WHERE id = ? AND is_active = ?";
+			String query = "SELECT 1 FROM products WHERE id = ? AND is_active = ?";
 			conn = ConnectionUtil.getConnection();
 			stmt = conn.prepareStatement(query);
 			stmt.setInt(1, productId);

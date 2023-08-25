@@ -33,16 +33,16 @@ public class CategoryService {
 	 *                   exception type and message depend on the underlying
 	 *                   validation and retrieval logic.
 	 */
-	public Category findById(int categoryId) throws Exception {
+	public Category findByCategoryId(int categoryId) throws Exception {
 		CategoryValidator.validateId(categoryId);
-		CategoryDAO categoryDao = new CategoryDAO();
+		CategoryDAO categoryDAO = new CategoryDAO();
 		boolean test = CategoryDAO.categoryExists(categoryId);
 
 		if (!test) {
 			throw new RuntimeException("Category does not exist");
 		}
 
-		return categoryDao.findById(categoryId);
+		return categoryDAO.findById(categoryId);
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class CategoryService {
 	 * "Category does not exist". If the category exists, the method uses a
 	 * 'CategoryDAO' instance to update the category details based on the provided
 	 * 'updatedCategory'. The category update is performed using the
-	 * 'categoryDao.update' method.
+	 * 'categoryDAO.update' method.
 	 *
 	 * @param id              The ID of the category to be updated.
 	 * @param updatedCategory An instance of 'Category' containing the updated
@@ -65,9 +65,9 @@ public class CategoryService {
 	 *                   type and message depend on the underlying validation and
 	 *                   update logic.
 	 */
-	public void update(int id, Category updatedCategory) throws Exception {
+	public void updateCategory(int id, Category updatedCategory) throws Exception {
 		CategoryValidator.validateId(id);
-		CategoryDAO categoryDao = new CategoryDAO();
+		CategoryDAO categoryDAO = new CategoryDAO();
 
 		boolean test = CategoryDAO.categoryExists(id);
 
@@ -75,7 +75,7 @@ public class CategoryService {
 			throw new RuntimeException("Category does not exist");
 		}
 
-		categoryDao.update(2, updatedCategory);
+		categoryDAO.update(2, updatedCategory);
 
 	}
 
@@ -89,7 +89,7 @@ public class CategoryService {
 	 * @return A 'Set' containing 'Category' objects representing the details of all
 	 *         categories.
 	 */
-	public Set<Category> getAll() {
+	public Set<Category> getAllCategories() {
 		CategoryDAO categoryDAO = new CategoryDAO();
 
 		Set<Category> categoryList = new HashSet<>();

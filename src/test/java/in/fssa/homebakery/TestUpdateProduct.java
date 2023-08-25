@@ -18,7 +18,7 @@ public class TestUpdateProduct {
 		ProductService productService = new ProductService();
 
 		Product product = new Product();
-		int id = 4;
+		int id = 2;
 		product.setProductName("Banana cake");
 		product.setDescription("You can sleep very good");
 		product.setCategoryId(3);
@@ -26,7 +26,7 @@ public class TestUpdateProduct {
 		product.setActive(true);
 
 		assertDoesNotThrow(() -> {
-			productService.update(id, product);
+			productService.updateProduct(id, product);
 		});
 
 	}
@@ -44,7 +44,7 @@ public class TestUpdateProduct {
 		product.setActive(true);
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			productService.update(id, product);
+			productService.updateProduct(id, product);
 		});
 
 		String expectedMessage = "Invalid Id";
@@ -66,7 +66,7 @@ public class TestUpdateProduct {
 		product.setActive(true);
 
 		Exception exception = assertThrows(RuntimeException.class, () -> {
-			productService.update(id, product);
+			productService.updateProduct(id, product);
 		});
 
 		String expectedMessage = "Product does not exist";
@@ -88,7 +88,7 @@ public class TestUpdateProduct {
 		product.setActive(true);
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			productService.update(id, product);
+			productService.updateProduct(id, product);
 		});
 
 		String expectedMessage = "Invalid category Id";
@@ -110,7 +110,7 @@ public class TestUpdateProduct {
 		product.setActive(true);
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			productService.update(id, product);
+			productService.updateProduct(id, product);
 		});
 
 		String expectedMessage = "Product Name cannot be null or empty";
@@ -132,7 +132,7 @@ public class TestUpdateProduct {
 		product.setActive(true);
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			productService.update(id, product);
+			productService.updateProduct(id, product);
 		});
 
 		String expectedMessage = "Description cannot be null or empty";

@@ -20,7 +20,7 @@ public class TestUpdateCategory {
 		updatedCategory.setCategoryName("Cookies");
 
 		assertDoesNotThrow(() -> {
-			categoryService.update(1, updatedCategory);
+			categoryService.updateCategory(1, updatedCategory);
 		});
 	}
 
@@ -32,7 +32,7 @@ public class TestUpdateCategory {
 		updatedCategory.setCategoryName("Cookies");
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			categoryService.update(4, updatedCategory);
+			categoryService.updateCategory(4, updatedCategory);
 		});
 
 		String expectedMessage = "Invalid input id";

@@ -43,18 +43,18 @@ public class ProductService {
 	 *                   exception type and message depend on the underlying
 	 *                   validation and insertion logic.
 	 */
-	public void create(ProductDetailDTO newProduct) {
+	public void createProduct(ProductDetailDTO newProduct) {
 
-		ProductDAO productDao = new ProductDAO();
-		ProductPriceDAO productPriceDao = new ProductPriceDAO();
+		ProductDAO productDAO = new ProductDAO();
+		ProductPriceDAO productPriceDAO = new ProductPriceDAO();
 
 		try {
 			ProductValidator.validate(newProduct);
 			ProductValidator.validatePriceList(newProduct.getPrices());
-			int id = productDao.create(newProduct);
+			int id = productDAO.create(newProduct);
 			
 			for (ProductPrice newPrice : newProduct.getPrices()) {
-				productPriceDao.create(newPrice, id);
+				productPriceDAO.create(newPrice, id);
 			}
 		} catch (PersistanceException e) {
 			e.printStackTrace();
@@ -81,11 +81,11 @@ public class ProductService {
 	 * @throws RuntimeException If the specified product does not exist or if an
 	 *                          error occurs during the deletion process.
 	 */
-	public void delete(int id) throws PersistanceException {
-		ProductDAO productDao = new ProductDAO();
-		ProductPriceDAO productPriceDao = new ProductPriceDAO();
+	public void deleteProduct(int id) throws PersistanceException {
+		ProductDAO productDAO = new ProductDAO();
 		
 		try {
+			ProductPriceDAO productPriceDAO = new ProductPriceDAO();
 			IntUtil.rejectIfInvalidInt(id);
 			boolean test = ProductDAO.productExists(id);
 			
@@ -93,11 +93,12 @@ public class ProductService {
 				throw new RuntimeException("Product does not exist");
 			}
 			
-			productDao.delete(id);
-			productPriceDao.delete(id);
+			productDAO.delete(id);
+			productPriceDAO.delete(id);
 		} catch (ValidationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			
 		}
 
 	}
@@ -118,13 +119,13 @@ public class ProductService {
 	 *         product along with its associated product prices.
 	 * @throws PersistanceException 
 	 */
-	public Set<ProductDetailDTO> getAll() throws PersistanceException {
-		ProductDAO productDao = new ProductDAO();
-		ProductPriceDAO priceDao = new ProductPriceDAO();
+	public Set<ProductDetailDTO> getAllProducts() throws PersistanceException {
+		ProductDAO productDAO = new ProductDAO();
+		ProductPriceDAO productPriceDAO = new ProductPriceDAO();
 
-		Set<ProductDetailDTO> productList = productDao.findAll();
+		Set<ProductDetailDTO> productList = productDAO.findAll();
 		for (ProductDetailDTO product : productList) {
-			List<ProductPrice> prices = priceDao.findByProductId(product.getId());
+			List<ProductPrice> prices = productPriceDAO.findByProductId(product.getId());
 			product.setPrices(prices);
 			System.out.println(product);
 		}
@@ -147,9 +148,9 @@ public class ProductService {
 	 * @throws ValidationException 
 	 * @throws PersistanceException 
 	 */
-	public ProductDetailDTO getById(int id) throws ValidationException, PersistanceException {
-	    ProductDAO productDao = new ProductDAO();
-	    ProductPriceDAO priceDao = new ProductPriceDAO();
+	public ProductDetailDTO getByProductId(int id) throws ValidationException, PersistanceException {
+	    ProductDAO productDAO = new ProductDAO();
+	    ProductPriceDAO productPriceDAO = new ProductPriceDAO();
 	    
 	    IntUtil.rejectIfInvalidInt(id);
 	    
@@ -159,9 +160,9 @@ public class ProductService {
 			throw new RuntimeException("Product does not exist");
 		}
 
-	    ProductDetailDTO product = productDao.findById(id);
+	    ProductDetailDTO product = productDAO.findById(id);
 	    if (product != null) {
-	        List<ProductPrice> prices = priceDao.findByProductId(product.getId());
+	        List<ProductPrice> prices = productPriceDAO.findByProductId(product.getId());
 	        product.setPrices(prices);
 	    }
 	    return product;
@@ -183,8 +184,8 @@ public class ProductService {
 	 * @throws PersistanceException 
 	 */
 	public List<ProductDetailDTO> getByCategoryId(int categoryId) throws ValidationException, PersistanceException {
-	    ProductDAO productDao = new ProductDAO();
-	    ProductPriceDAO priceDao = new ProductPriceDAO();
+	    ProductDAO productDAO = new ProductDAO();
+	    ProductPriceDAO productPriceDAO = new ProductPriceDAO();
 	    
 	    CategoryValidator.validateId(categoryId);
 	    
@@ -194,9 +195,9 @@ public class ProductService {
 			throw new RuntimeException("Category does not exist");
 		}
 	    
-	    List<ProductDetailDTO> productList = productDao.findByCategoryId(categoryId);
+	    List<ProductDetailDTO> productList = productDAO.findByCategoryId(categoryId);
 	    for (ProductDetailDTO product : productList) {
-	        List<ProductPrice> prices = priceDao.findByProductId(product.getId());
+	        List<ProductPrice> prices = productPriceDAO.findByProductId(product.getId());
 	        product.setPrices(prices);
 	    }
 	    return productList;
@@ -226,7 +227,7 @@ public class ProductService {
 	 * @throws Exception        If there's an issue with the provided 'id' or
 	 *                          'newProduct'.
 	 */
-	public void update(int id, Product newProduct) throws Exception {
+	public void updateProduct(int id, Product newProduct) throws Exception {
 		IntUtil.rejectIfInvalidInt(id);
 
 		boolean test = ProductDAO.productExists(id);

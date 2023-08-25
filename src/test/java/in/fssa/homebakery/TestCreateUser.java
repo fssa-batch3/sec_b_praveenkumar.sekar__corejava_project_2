@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.security.SecureRandom;
+import java.util.Random;
+
 import org.junit.jupiter.api.Test;
 
 import in.fssa.homebakery.exception.ValidationException;
@@ -11,6 +14,25 @@ import in.fssa.homebakery.model.User;
 import in.fssa.homebakery.service.UserService;
 
 public class TestCreateUser {
+	
+	
+	private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static final int LENGTH = 10;
+
+    public static String generateRandomString() {
+        StringBuilder sb = new StringBuilder(LENGTH);
+        Random random = new SecureRandom();
+
+        for (int i = 0; i < LENGTH; i++) {
+            int randomIndex = random.nextInt(CHARACTERS.length());
+            char randomChar = CHARACTERS.charAt(randomIndex);
+            sb.append(randomChar);
+        }
+
+        return sb.toString();
+    }
+    
+    String randomString = generateRandomString();
 
 	@Test
 	public void testCreateUserWithValidData() {
@@ -19,12 +41,12 @@ public class TestCreateUser {
 
 		newUser.setFirstName("Formido");
 		newUser.setLastName("Boi");
-		newUser.setEmail("formido123@gmail.com");
+		newUser.setEmail(randomString + "@gmail.com");
 		newUser.setPassword("Aspirin@2004");
 		newUser.setPhoneNo(9345209293l);
 
 		assertDoesNotThrow(() -> {
-			userService.create(newUser);
+			userService.createUser(newUser);
 		});
 	}
 
@@ -35,7 +57,7 @@ public class TestCreateUser {
 		User newUser = null;
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			userService.create(newUser);
+			userService.createUser(newUser);
 		});
 
 		String expectedMessage = "Invalid user input";
@@ -51,12 +73,12 @@ public class TestCreateUser {
 
 		newUser.setFirstName(null);
 		newUser.setLastName("Boi");
-		newUser.setEmail("formido123@gmail.com");
+		newUser.setEmail(randomString + "@gmail.com");
 		newUser.setPassword("Aspirin@2004");
 		newUser.setPhoneNo(9345209293l);
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			userService.create(newUser);
+			userService.createUser(newUser);
 		});
 
 		String expectedMessage = "First Name cannot be null or empty";
@@ -72,12 +94,12 @@ public class TestCreateUser {
 
 		newUser.setFirstName("");
 		newUser.setLastName("Boi");
-		newUser.setEmail("formido123@gmail.com");
+		newUser.setEmail(randomString + "@gmail.com");
 		newUser.setPassword("Aspirin@2004");
 		newUser.setPhoneNo(9345209293l);
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			userService.create(newUser);
+			userService.createUser(newUser);
 		});
 
 		String expectedMessage = "First Name cannot be null or empty";
@@ -93,12 +115,12 @@ public class TestCreateUser {
 
 		newUser.setFirstName("Prave  1243");
 		newUser.setLastName("Boi");
-		newUser.setEmail("formido123@gmail.com");
+		newUser.setEmail(randomString + "@gmail.com");
 		newUser.setPassword("Aspirin@2004");
 		newUser.setPhoneNo(9345209293l);
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			userService.create(newUser);
+			userService.createUser(newUser);
 		});
 
 		String expectedMessage = "Name should only contain alphabets and be seprated by only one space";
@@ -119,7 +141,7 @@ public class TestCreateUser {
 		newUser.setPhoneNo(9345209293l);
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			userService.create(newUser);
+			userService.createUser(newUser);
 		});
 
 
@@ -144,7 +166,7 @@ public class TestCreateUser {
 		newUser.setPhoneNo(9345209293l);
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			userService.create(newUser);
+			userService.createUser(newUser);
 		});
 
 		String expectedMessage = "Email cannot be null or empty";
@@ -165,7 +187,7 @@ public class TestCreateUser {
 		newUser.setPhoneNo(9345209293l);
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			userService.create(newUser);
+			userService.createUser(newUser);
 		});
 
 		String expectedMessage = "Email cannot be null or empty";
@@ -181,12 +203,12 @@ public class TestCreateUser {
 
 		newUser.setFirstName("Formido");
 		newUser.setLastName("Boi");
-		newUser.setEmail("formidoboi123@gmail.com");
+		newUser.setEmail(randomString + "@gmail.com");
 		newUser.setPassword("Aspirin@2004");
 		newUser.setPhoneNo(123456789l);
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			userService.create(newUser);
+			userService.createUser(newUser);
 		});
 
 		String expectedMessage = "Phone number is invalid";
@@ -202,12 +224,12 @@ public class TestCreateUser {
 
 		newUser.setFirstName("Formido");
 		newUser.setLastName("Boi");
-		newUser.setEmail("formidoboi123@gmail.com");
+		newUser.setEmail(randomString + "@gmail.com");
 		newUser.setPassword(null);
 		newUser.setPhoneNo(6374111637l);
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			userService.create(newUser);
+			userService.createUser(newUser);
 		});
 
 		String expectedMessage = "Password cannot be null or empty";
@@ -223,12 +245,12 @@ public class TestCreateUser {
 
 		newUser.setFirstName("Formido");
 		newUser.setLastName("Boi");
-		newUser.setEmail("formidoboi123@gmail.com");
+		newUser.setEmail(randomString + "@gmail.com");
 		newUser.setPassword("");
 		newUser.setPhoneNo(6374111637l);
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			userService.create(newUser);
+			userService.createUser(newUser);
 		});
 
 		String expectedMessage = "Password cannot be null or empty";
@@ -244,12 +266,12 @@ public class TestCreateUser {
 
 		newUser.setFirstName("Formido");
 		newUser.setLastName("Boi");
-		newUser.setEmail("formidoboi123@gmail.com");
+		newUser.setEmail(randomString + "@gmail.com");
 		newUser.setPassword("Praveen123");
 		newUser.setPhoneNo(6374111637l);
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			userService.create(newUser);
+			userService.createUser(newUser);
 		});
 
 		String expectedMessage = "Invalid password format. Please provide a password with the following conditions:\n"

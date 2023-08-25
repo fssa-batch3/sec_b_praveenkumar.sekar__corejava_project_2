@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import in.fssa.homebakery.exception.PersistanceException;
-import in.fssa.homebakery.interface_files.CategoryInterface;
+import in.fssa.homebakery.interfaces.CategoryInterface;
 import in.fssa.homebakery.model.Category;
 import in.fssa.homebakery.util.ConnectionUtil;
 
@@ -96,7 +96,7 @@ public class CategoryDAO implements CategoryInterface {
 		ResultSet rs = null;
 
 		try {
-			String query = "SELECT * FROM categories";
+			String query = "SELECT id, category_name FROM categories";
 			conn = ConnectionUtil.getConnection();
 			ps = conn.prepareStatement(query);
 			rs = ps.executeQuery();
@@ -144,7 +144,7 @@ public class CategoryDAO implements CategoryInterface {
 		ResultSet rs = null;
 
 		try {
-			String query = "SELECT * FROM categories WHERE id = ?";
+			String query = "SELECT id, category_name FROM categories WHERE id = ?";
 			conn = ConnectionUtil.getConnection();
 			ps = conn.prepareStatement(query);
 
@@ -189,7 +189,7 @@ public class CategoryDAO implements CategoryInterface {
 		ResultSet rs = null;
 
 		try {
-			String query = "SELECT COUNT(*) FROM categories WHERE id = ?";
+			String query = "SELECT 1 FROM categories WHERE id = ?";
 			conn = ConnectionUtil.getConnection();
 			stmt = conn.prepareStatement(query);
 			stmt.setInt(1, categoryId);

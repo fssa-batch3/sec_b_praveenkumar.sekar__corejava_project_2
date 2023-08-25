@@ -59,7 +59,7 @@ public class TestCreateProduct {
 		productDetailDto.setPrices(priceList);
 
 		assertDoesNotThrow(() -> {
-			productService.create(productDetailDto);
+			productService.createProduct(productDetailDto);
 		});
 
 	}
@@ -69,7 +69,7 @@ public class TestCreateProduct {
 		ProductService productService = new ProductService();
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			productService.create(null);
+			productService.createProduct(null);
 		});
 
 		String expectedMessage = "Invalid product input";
@@ -118,7 +118,7 @@ public class TestCreateProduct {
 		productDetailDto.setPrices(priceList);
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			productService.create(productDetailDto);
+			productService.createProduct(productDetailDto);
 		});
 
 		String expectedMessage = "Product Name cannot be null or empty";
@@ -167,7 +167,7 @@ public class TestCreateProduct {
 		productDetailDto.setPrices(priceList);
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			productService.create(productDetailDto);
+			productService.createProduct(productDetailDto);
 		});
 
 		String expectedMessage = "Description cannot be null or empty";
@@ -190,7 +190,7 @@ public class TestCreateProduct {
 		productDetailDto.setActive(true);
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			productService.create(productDetailDto);
+			productService.createProduct(productDetailDto);
 		});
 
 		String expectedMessage = "Price List cannot be null or empty";
@@ -215,7 +215,7 @@ public class TestCreateProduct {
 		productDetailDto.setPrices(list);
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			productService.create(productDetailDto);
+			productService.createProduct(productDetailDto);
 		});
 
 		String expectedMessage = "No price found";
@@ -243,7 +243,7 @@ public class TestCreateProduct {
 		productDetailDto.setPrices(priceList);
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			productService.create(productDetailDto);
+			productService.createProduct(productDetailDto);
 		});
 
 		String expectedMessage = "Price cannot be null";
@@ -291,7 +291,7 @@ public class TestCreateProduct {
 		productDetailDto.setPrices(priceList);
 		
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			productService.create(productDetailDto);
+			productService.createProduct(productDetailDto);
 		});
 
 		String expectedMessage = "Invalid category Id";

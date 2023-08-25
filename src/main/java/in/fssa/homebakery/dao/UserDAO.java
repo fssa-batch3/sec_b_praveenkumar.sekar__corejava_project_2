@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import in.fssa.homebakery.exception.PersistanceException;
-import in.fssa.homebakery.interface_files.UserInterface;
+import in.fssa.homebakery.interfaces.UserInterface;
 import in.fssa.homebakery.model.User;
 import in.fssa.homebakery.util.ConnectionUtil;
 
@@ -166,7 +166,7 @@ public class UserDAO implements UserInterface {
 		ResultSet rs = null;
 
 		try {
-			String query = "SELECT * FROM users WHERE is_active = 1";
+			String query = "SELECT id, first_name, last_name, email, phone_no FROM users WHERE is_active = 1";
 			conn = ConnectionUtil.getConnection();
 			ps = conn.prepareStatement(query);
 			rs = ps.executeQuery();
@@ -220,7 +220,7 @@ public class UserDAO implements UserInterface {
 		ResultSet rs = null;
 
 		try {
-			String query = "SELECT * FROM users WHERE is_active = 1 AND id = ?";
+			String query = "SELECT id, first_name, last_name, email, phone_no FROM users WHERE is_active = 1 AND id = ?";
 			conn = ConnectionUtil.getConnection();
 			ps = conn.prepareStatement(query);
 
@@ -268,7 +268,7 @@ public class UserDAO implements UserInterface {
 
 		try {
 			conn = ConnectionUtil.getConnection();
-			String query = "SELECT COUNT(*) FROM users WHERE id = ?";
+			String query = "SELECT 1 FROM users WHERE id = ?";
 			stmt = conn.prepareStatement(query);
 			stmt.setInt(1, id);
 
@@ -309,7 +309,7 @@ public class UserDAO implements UserInterface {
 
 	    try {
 	        conn = ConnectionUtil.getConnection();
-	        String query = "SELECT COUNT(*) FROM users WHERE email = ?";
+	        String query = "SELECT 1 FROM users WHERE email = ?";
 	        stmt = conn.prepareStatement(query);
 	        stmt.setString(1, email);
 

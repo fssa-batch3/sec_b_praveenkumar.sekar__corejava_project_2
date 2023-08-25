@@ -27,7 +27,7 @@ public class TestUpdateProductPrice {
 
 		// Act and Assert
 		assertDoesNotThrow(() -> {
-			productService.update(productId, productPrice, quantity);
+			productService.updateProductPrice(productId, productPrice, quantity);
 		});
 	}
 
@@ -42,7 +42,7 @@ public class TestUpdateProductPrice {
 
 		// Act and Assert
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			productService.update(productId, productPrice, quantity);
+			productService.updateProductPrice(productId, productPrice, quantity);
 		});
 
 		String expectedMessage = "Price cannot be null";
@@ -67,7 +67,7 @@ public class TestUpdateProductPrice {
 
 		// Act and Assert
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			productService.update(productId, productPrice, quantity);
+			productService.updateProductPrice(productId, productPrice, quantity);
 		});
 
 		String expectedMessage = "Invalid Quantity";
@@ -91,7 +91,7 @@ public class TestUpdateProductPrice {
 
 		// Act and Assert
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			productService.update(productId, productPrice, quantity);
+			productService.updateProductPrice(productId, productPrice, quantity);
 		});
 
 		String expectedMessage = "Invalid Id";
@@ -114,7 +114,7 @@ public class TestUpdateProductPrice {
 
 		// Act and Assert
 		Exception exception = assertThrows(RuntimeException.class, () -> {
-			productService.update(productId, productPrice, quantity);
+			productService.updateProductPrice(productId, productPrice, quantity);
 		});
 
 		String expectedMessage = "Product does not exist";
@@ -137,7 +137,7 @@ public class TestUpdateProductPrice {
 
 		// Act and Assert
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			productService.update(productId, productPrice, quantity);
+			productService.updateProductPrice(productId, productPrice, quantity);
 		});
 
 		String expectedMessage = "Invalid price";

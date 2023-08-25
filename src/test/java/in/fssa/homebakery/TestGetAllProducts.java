@@ -20,7 +20,7 @@ public class TestGetAllProducts {
 		ProductService productService = new ProductService(); // Replace with your actual service class
 
 		assertDoesNotThrow(() -> {
-			Set<ProductDetailDTO> products = productService.getAll(); // Replace with the actual method name
+			Set<ProductDetailDTO> products = productService.getAllProducts(); // Replace with the actual method name
 
 			for(ProductDetailDTO prod : products) {
 				System.out.println(prod.toString());
@@ -35,7 +35,7 @@ public class TestGetAllProducts {
 		int id = 1;
 		
 		assertDoesNotThrow(() -> {
-			ProductDetailDTO products = productService.getById(id); // Replace with the actual method name
+			ProductDetailDTO products = productService.getByProductId(id); // Replace with the actual method name
 
 				System.out.println(products.toString());
 		});
@@ -48,7 +48,7 @@ public class TestGetAllProducts {
 		int id = -2;
 		
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			productService.getById(id);
+			productService.getByProductId(id);
 		});
 		
 		String expectedMessage = "Invalid Id";
@@ -65,7 +65,7 @@ public class TestGetAllProducts {
 		int id = 10;
 		
 		Exception exception = assertThrows(RuntimeException.class, () -> {
-			productService.getById(id);
+			productService.getByProductId(id);
 		});
 		
 		String expectedMessage = "Product does not exist";

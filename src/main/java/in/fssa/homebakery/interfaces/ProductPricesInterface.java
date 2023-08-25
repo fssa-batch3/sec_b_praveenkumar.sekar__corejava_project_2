@@ -1,4 +1,4 @@
-package in.fssa.homebakery.interface_files;
+package in.fssa.homebakery.interfaces;
 
 import java.util.List;
 import java.util.Set;

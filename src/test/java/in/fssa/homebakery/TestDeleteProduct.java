@@ -14,10 +14,10 @@ public class TestDeleteProduct {
 	public void testDeleteProductWithValidId() {
 		ProductService prodService = new ProductService();
 
-		int id = 6;
+		int id = 2;
 
 		assertDoesNotThrow(() -> {
-			prodService.delete(id);
+			prodService.deleteProduct(id);
 		});
 	}
 
@@ -28,7 +28,7 @@ public class TestDeleteProduct {
 		int id = -2;
 		
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			prodService.delete(id);
+			prodService.deleteProduct(id);
 		});
 
 		String expectedMessage = "Invalid Id";
@@ -42,7 +42,7 @@ public class TestDeleteProduct {
 		int id = 44;
 		
 		Exception exception = assertThrows(RuntimeException.class, () -> {
-			prodService.delete(id);
+			prodService.deleteProduct(id);
 		});
 
 		String expectedMessage = "Product does not exist";

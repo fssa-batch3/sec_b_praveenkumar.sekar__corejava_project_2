@@ -44,7 +44,7 @@ public class ProductPriceService {
 	 *                   message depend on the underlying validation and update
 	 *                   logic.
 	 */
-	public void update(int id, ProductPrice productPrice, double quantity) throws Exception {
+	public void updateProductPrice(int id, ProductPrice productPrice, double quantity) throws Exception {
 
 		IntUtil.rejectIfInvalidInt(id);
 		PriceValidator.validate(productPrice);
@@ -79,7 +79,7 @@ public class ProductPriceService {
 	 *         all product prices.
 	 * @throws PersistanceException 
 	 */
-	public Set<ProductPrice> findAll() throws PersistanceException {
+	public Set<ProductPrice> findAllProductPrices() throws PersistanceException {
 		ProductPriceDAO productPriceDAO = new ProductPriceDAO();
 		Set<ProductPrice> priceList = productPriceDAO.findAll();
 		for (ProductPrice price : priceList) {
@@ -146,7 +146,7 @@ public class ProductPriceService {
 	 *                   exception type and message depend on the underlying
 	 *                   validation and retrieval logic.
 	 */
-	public ProductPrice findById(int id) throws Exception {
+	public ProductPrice findByPriceId(int id) throws Exception {
 		IntUtil.rejectIfInvalidInt(id);
 		ProductPriceDAO productPriceDAO = new ProductPriceDAO();
 		return productPriceDAO.findById(id);

@@ -17,7 +17,7 @@ public class TestDeleteUser {
 		int id = 3;
 
 		assertDoesNotThrow(() -> {
-			userService.delete(id);
+			userService.deleteUser(id);
 		});
 	}
 
@@ -28,7 +28,7 @@ public class TestDeleteUser {
 		int id = -3;
 		
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			userService.delete(id);
+			userService.deleteUser(id);
 		});
 
 		String expectedMessage = "Invalid Id";
@@ -42,7 +42,7 @@ public class TestDeleteUser {
 		int id = 29;
 		
 		Exception exception = assertThrows(RuntimeException.class, () -> {
-			userService.delete(id);
+			userService.deleteUser(id);
 		});
 
 		String expectedMessage = "User does not exist";

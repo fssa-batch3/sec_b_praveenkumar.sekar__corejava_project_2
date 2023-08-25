@@ -19,7 +19,7 @@ public class TestGetAllCategories {
 		CategoryService categoryService = new CategoryService();
 
 		assertDoesNotThrow(() -> {
-			Set<Category> category = categoryService.getAll();
+			Set<Category> category = categoryService.getAllCategories();
 
 			System.out.println(category);
 		});
@@ -30,7 +30,7 @@ public class TestGetAllCategories {
 		CategoryService categoryService = new CategoryService();
 		
 		assertDoesNotThrow(() -> {
-			Category category = categoryService.findById(2);
+			Category category = categoryService.findByCategoryId(2);
 
 			System.out.println(category);
 		});
@@ -41,7 +41,7 @@ public class TestGetAllCategories {
 		CategoryService categoryService = new CategoryService();
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			categoryService.findById(4);
+			categoryService.findByCategoryId(4);
 		});
 
 		String expectedMessage = "Invalid input id";

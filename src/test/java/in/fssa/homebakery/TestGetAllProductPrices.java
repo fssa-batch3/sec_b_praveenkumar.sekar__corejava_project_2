@@ -20,7 +20,7 @@ public class TestGetAllProductPrices {
 		ProductPriceService productPriceService = new ProductPriceService(); // Replace with your actual service class
 
 		assertDoesNotThrow(() -> {
-			Set<ProductPrice> products = productPriceService.findAll(); // Replace with the actual method name
+			Set<ProductPrice> products = productPriceService.findAllProductPrices(); // Replace with the actual method name
 
 			for (ProductPrice prod : products) {
 				System.out.println(prod.toString());
@@ -35,7 +35,7 @@ public class TestGetAllProductPrices {
 		int id = 3;
 
 		assertDoesNotThrow(() -> {
-			ProductPrice products = productPriceService.findById(id);
+			ProductPrice products = productPriceService.findByPriceId(id);
 		});
 	}
 
@@ -46,7 +46,7 @@ public class TestGetAllProductPrices {
 		int id = -3;
 		
 		Exception exception = assertThrows(ValidationException.class, () -> {
-			productPriceService.findById(id);
+			productPriceService.findByPriceId(id);
 		});
 		
 		String expectedMessage = "Invalid Id";
