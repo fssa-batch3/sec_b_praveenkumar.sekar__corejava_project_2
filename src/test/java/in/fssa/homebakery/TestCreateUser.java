@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.security.SecureRandom;
 import java.util.Random;
 
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import in.fssa.homebakery.exception.ValidationException;
@@ -35,6 +36,7 @@ public class TestCreateUser {
     String randomString = generateRandomString();
 
 	@Test
+	@Order(1)
 	public void testCreateUserWithValidData() {
 		UserService userService = new UserService();
 		User newUser = new User();
@@ -51,6 +53,7 @@ public class TestCreateUser {
 	}
 
 	@Test
+	@Order(2)
 	public void testCreateUserWithInvalidData() {
 
 		UserService userService = new UserService();
@@ -67,6 +70,7 @@ public class TestCreateUser {
 	}
 
 	@Test
+	@Order(3)
 	public void testCreateUserWithInvalidFirstName() {
 		UserService userService = new UserService();
 		User newUser = new User();
@@ -88,6 +92,7 @@ public class TestCreateUser {
 	}
 
 	@Test
+	@Order(4)
 	public void testCreateUserWithEmptyFirstName() {
 		UserService userService = new UserService();
 		User newUser = new User();
@@ -109,6 +114,7 @@ public class TestCreateUser {
 	}
 
 	@Test
+	@Order(5)
 	public void testCreateUserWithInvalidFirstNamePattern() {
 		UserService userService = new UserService();
 		User newUser = new User();
@@ -130,6 +136,7 @@ public class TestCreateUser {
 	}
 
 	@Test
+	@Order(6)
 	public void testCreateUserWithInvalidEmailPattern() {
 		UserService userService = new UserService();
 		User newUser = new User();
@@ -155,6 +162,7 @@ public class TestCreateUser {
 	}
 
 	@Test
+	@Order(7)
 	public void testCreateUserWithInvalidEmail() {
 		UserService userService = new UserService();
 		User newUser = new User();
@@ -176,6 +184,7 @@ public class TestCreateUser {
 	}
 	
 	@Test
+	@Order(8)
 	public void testCreateUserWithEmptyEmail() {
 		UserService userService = new UserService();
 		User newUser = new User();
@@ -197,6 +206,7 @@ public class TestCreateUser {
 	}
 
 	@Test
+	@Order(9)
 	public void testCreateUserWithInvalidPhoneNo() {
 		UserService userService = new UserService();
 		User newUser = new User();
@@ -218,6 +228,7 @@ public class TestCreateUser {
 	}
 
 	@Test
+	@Order(10)
 	public void testCreateUserWithInvalidPassword() {
 		UserService userService = new UserService();
 		User newUser = new User();
@@ -239,6 +250,7 @@ public class TestCreateUser {
 	}
 	
 	@Test
+	@Order(11)
 	public void testCreateUserWithEmptyPassword() {
 		UserService userService = new UserService();
 		User newUser = new User();
@@ -260,6 +272,7 @@ public class TestCreateUser {
 	}
 	
 	@Test
+	@Order(12)
 	public void testCreateUserWithInvalidPasswordPattern() {
 		UserService userService = new UserService();
 		User newUser = new User();

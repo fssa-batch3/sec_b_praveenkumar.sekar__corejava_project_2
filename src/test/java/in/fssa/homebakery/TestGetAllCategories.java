@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Set;
 
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import in.fssa.homebakery.exception.ValidationException;
@@ -15,6 +16,7 @@ import in.fssa.homebakery.service.CategoryService;
 public class TestGetAllCategories {
 
 	@Test
+	@Order(1)
 	public void getAllCategories() {
 		CategoryService categoryService = new CategoryService();
 
@@ -26,6 +28,7 @@ public class TestGetAllCategories {
 	}
 
 	@Test
+	@Order(2)
 	public void getCategoryById() {
 		CategoryService categoryService = new CategoryService();
 		
@@ -37,6 +40,7 @@ public class TestGetAllCategories {
 	}
 
 	@Test
+	@Order(3)
 	public void getCategoryByInvalidId() {
 		CategoryService categoryService = new CategoryService();
 

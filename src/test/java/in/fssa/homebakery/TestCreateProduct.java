@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import in.fssa.homebakery.dto.ProductDetailDTO;
@@ -21,6 +22,7 @@ public class TestCreateProduct {
 	Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis()); // Current timestamp
 
 	@Test
+	@Order(1)
 	public void testCreateProductWithVailidInput() {
 		ProductService productService = new ProductService();
 
@@ -65,6 +67,7 @@ public class TestCreateProduct {
 	}
 
 	@Test
+	@Order(2)
 	public void testCreateProductWithInvalidInput() {
 		ProductService productService = new ProductService();
 
@@ -80,6 +83,7 @@ public class TestCreateProduct {
 	}
 
 	@Test
+	@Order(3)
 	public void testCreateProductWithInvalidProductName() {
 		ProductService productService = new ProductService();
 
@@ -129,6 +133,7 @@ public class TestCreateProduct {
 	}
 
 	@Test
+	@Order(4)
 	public void testCreateProductWithInvalidDescription() {
 		ProductService productService = new ProductService();
 
@@ -178,6 +183,7 @@ public class TestCreateProduct {
 	}
 
 	@Test
+	@Order(5)
 	public void testCreateProductWithInvalidPriceList() {
 		ProductService productService = new ProductService();
 
@@ -200,6 +206,7 @@ public class TestCreateProduct {
 	}
 
 	@Test
+	@Order(6)
 	public void testCreateProductWithEmptyPriceList() {
 		ProductService productService = new ProductService();
 
@@ -225,6 +232,7 @@ public class TestCreateProduct {
 	}
 
 	@Test
+	@Order(7)
 	public void testCreateProductWithInvalidPrice() {
 		ProductService productService = new ProductService();
 
@@ -254,6 +262,7 @@ public class TestCreateProduct {
 	}
 	
 	@Test 
+	@Order(8)
 	public void testCreateProductWithInvalidCategoryId() {
 		ProductService productService = new ProductService();
 		ProductDetailDTO productDetailDto = new ProductDetailDTO();

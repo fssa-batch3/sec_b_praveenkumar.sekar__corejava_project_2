@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import in.fssa.homebakery.exception.ValidationException;
@@ -16,6 +17,7 @@ import in.fssa.homebakery.service.ProductPriceService;
 public class TestGetAllProductPrices {
 
 	@Test
+	@Order(1)
 	public void testGetAllProductPrices() {
 		ProductPriceService productPriceService = new ProductPriceService(); // Replace with your actual service class
 
@@ -29,6 +31,7 @@ public class TestGetAllProductPrices {
 	}
 
 	@Test
+	@Order(2)
 	public void testGetProductsPricesById() {
 		ProductPriceService productPriceService = new ProductPriceService();
 
@@ -40,6 +43,7 @@ public class TestGetAllProductPrices {
 	}
 
 	@Test
+	@Order(3)
 	public void testGetProductsPricesByInvalidId() {
 		ProductPriceService productPriceService = new ProductPriceService();
 
@@ -56,6 +60,7 @@ public class TestGetAllProductPrices {
 	}
 	
 	@Test
+	@Order(4)
 	public void testGetProductsPricesByProductId() {
 		ProductPriceService productPriceService = new ProductPriceService();
 

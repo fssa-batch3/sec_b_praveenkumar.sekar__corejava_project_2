@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import in.fssa.homebakery.dto.ProductDetailDTO;
@@ -14,6 +15,7 @@ import in.fssa.homebakery.service.ProductService;
 public class TestUpdateProduct {
 
 	@Test
+	@Order(1)
 	public void testUpdateProductWithValidInput() {
 		ProductService productService = new ProductService();
 
@@ -32,6 +34,7 @@ public class TestUpdateProduct {
 	}
 
 	@Test
+	@Order(2)
 	public void testUpdateProductWithInvalidId() {
 		ProductService productService = new ProductService();
 
@@ -54,6 +57,7 @@ public class TestUpdateProduct {
 	}
 
 	@Test
+	@Order(3)
 	public void testUpdateProductWithProductIdNotExists() {
 		ProductService productService = new ProductService();
 
@@ -76,6 +80,7 @@ public class TestUpdateProduct {
 	}
 	
 	@Test
+	@Order(4)
 	public void testUpdateProductWithInvalidCategoryId() {
 		ProductService productService = new ProductService();
 
@@ -98,6 +103,7 @@ public class TestUpdateProduct {
 	}
 	
 	@Test 
+	@Order(5)
 	public void testUpdateWithInvalidProductname() {
 		ProductService productService = new ProductService();
 
@@ -120,6 +126,7 @@ public class TestUpdateProduct {
 	}
 	
 	@Test 
+	@Order(6)
 	public void testUpdateWithInvalidDescription() {
 		ProductService productService = new ProductService();
 
