@@ -8,6 +8,8 @@ import java.util.Set;
 
 import in.fssa.homebakery.dao.CategoryDAO;
 import in.fssa.homebakery.exception.PersistanceException;
+import in.fssa.homebakery.exception.ServiceException;
+import in.fssa.homebakery.exception.ValidationException;
 import in.fssa.homebakery.model.Category;
 import in.fssa.homebakery.util.ConnectionUtil;
 import in.fssa.homebakery.validator.CategoryValidator;
@@ -28,21 +30,27 @@ public class CategoryService {
 	 * @param categoryId The ID of the category to be retrieved.
 	 * @return A 'Category' object representing the details of the retrieved
 	 *         category.
+	 * @throws ValidationException, throws ServiceException 
 	 * @throws Exception If the provided 'categoryId' is not valid, or if an error
 	 *                   occurs during the database retrieval process. The specific
 	 *                   exception type and message depend on the underlying
 	 *                   validation and retrieval logic.
 	 */
-	public Category findByCategoryId(int categoryId) throws Exception {
-		CategoryValidator.validateId(categoryId);
-		CategoryDAO categoryDAO = new CategoryDAO();
-		boolean test = CategoryDAO.categoryExists(categoryId);
-
-		if (!test) {
-			throw new RuntimeException("Category does not exist");
+	public Category findByCategoryId(int categoryId) throws ValidationException, ServiceException {
+		try {
+			CategoryValidator.validateId(categoryId);
+			CategoryDAO categoryDAO = new CategoryDAO();
+			boolean test = CategoryDAO.categoryExists(categoryId);
+			
+			if (!test) {
+				throw new RuntimeException("Category does not exist");
+			}
+			
+			return categoryDAO.findById(categoryId);
+		} catch (PersistanceException e) {
+			e.printStackTrace();
+			throw new ServiceException(e.getMessage());
 		}
-
-		return categoryDAO.findById(categoryId);
 	}
 
 	/**
@@ -60,22 +68,28 @@ public class CategoryService {
 	 * @param id              The ID of the category to be updated.
 	 * @param updatedCategory An instance of 'Category' containing the updated
 	 *                        category information.
+	 * @throws ValidationException, ServiceException 
 	 * @throws Exception If the provided 'id' is not valid, or if an error occurs
 	 *                   during the database update process. The specific exception
 	 *                   type and message depend on the underlying validation and
 	 *                   update logic.
 	 */
-	public void updateCategory(int id, Category updatedCategory) throws Exception {
-		CategoryValidator.validateId(id);
-		CategoryDAO categoryDAO = new CategoryDAO();
-
-		boolean test = CategoryDAO.categoryExists(id);
-
-		if (!test) {
-			throw new RuntimeException("Category does not exist");
+	public void updateCategory(int id, Category updatedCategory) throws ValidationException, ServiceException {
+		try {
+			CategoryValidator.validateId(id);
+			CategoryDAO categoryDAO = new CategoryDAO();
+			
+			boolean test = CategoryDAO.categoryExists(id);
+			
+			if (!test) {
+				throw new RuntimeException("Category does not exist");
+			}
+			
+			categoryDAO.update(2, updatedCategory);
+		} catch (PersistanceException e) {
+			e.printStackTrace();
+			throw new ServiceException(e.getMessage());
 		}
-
-		categoryDAO.update(2, updatedCategory);
 
 	}
 
@@ -89,7 +103,7 @@ public class CategoryService {
 	 * @return A 'Set' containing 'Category' objects representing the details of all
 	 *         categories.
 	 */
-	public Set<Category> getAllCategories() {
+	public Set<Category> getAllCategories() throws ServiceException{
 		CategoryDAO categoryDAO = new CategoryDAO();
 
 		Set<Category> categoryList = new HashSet<>();
@@ -97,6 +111,7 @@ public class CategoryService {
 			categoryList = categoryDAO.findAll();
 		} catch (PersistanceException e) {
 			e.printStackTrace();
+			throw new ServiceException(e.getMessage());
 		}
 
 		return categoryList;

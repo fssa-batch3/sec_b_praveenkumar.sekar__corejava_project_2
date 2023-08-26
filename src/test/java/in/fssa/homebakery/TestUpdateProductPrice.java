@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import in.fssa.homebakery.exception.ValidationException;
@@ -14,6 +15,7 @@ import in.fssa.homebakery.service.ProductService;
 public class TestUpdateProductPrice {
 
 	@Test
+	@Order(1)
 	public void testUpdateValidProduct() throws Exception {
 
 		ProductPriceService productService = new ProductPriceService();
@@ -32,6 +34,7 @@ public class TestUpdateProductPrice {
 	}
 
 	@Test
+	@Order(2)
 	public void testUpdateInvalidProduct() {
 
 		ProductPriceService productService = new ProductPriceService();
@@ -52,6 +55,7 @@ public class TestUpdateProductPrice {
 	}
 
 	@Test
+	@Order(3)
 	public void testUpdateInvalidQuantity() {
 
 		ProductPriceService productService = new ProductPriceService();
@@ -77,6 +81,7 @@ public class TestUpdateProductPrice {
 	}
 
 	@Test
+	@Order(4)
 	public void testUpdateInvalidProductId() {
 		ProductPriceService productService = new ProductPriceService();
 
@@ -101,6 +106,7 @@ public class TestUpdateProductPrice {
 	}
 
 	@Test
+	@Order(5)
 	public void testUpdateProductDoesNotExist() {
 		ProductPriceService productService = new ProductPriceService();
 
@@ -124,6 +130,7 @@ public class TestUpdateProductPrice {
 	}
 	
 	@Test
+	@Order(6)
 	public void testUpdateInvalidPrice() {
 		ProductPriceService productService = new ProductPriceService();
 

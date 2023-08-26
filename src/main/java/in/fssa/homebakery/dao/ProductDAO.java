@@ -141,7 +141,6 @@ public class ProductDAO {
 				product.setDescription(rs.getString("description"));
 				product.setCategoryId(rs.getInt("category_id"));
 				product.setVeg(rs.getBoolean("is_veg"));
-				product.setActive(rs.getBoolean("is_active"));
 				setOfUser.add(product);
 			}
 
@@ -197,7 +196,6 @@ public class ProductDAO {
 				product.setDescription(rs.getString("description"));
 				product.setCategoryId(rs.getInt("category_id"));
 				product.setVeg(rs.getBoolean("is_veg"));
-				product.setActive(rs.getBoolean("is_active"));
 			}
 
 		} catch (SQLException e) {

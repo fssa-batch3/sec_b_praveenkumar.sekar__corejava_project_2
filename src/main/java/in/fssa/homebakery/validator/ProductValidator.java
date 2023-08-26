@@ -24,7 +24,7 @@ public class ProductValidator {
 	 * @throws ValidationException If the provided ProductDetailDTO object or its
 	 *                             properties are invalid.
 	 */
-	public static void validate(ProductDetailDTO product) throws Exception {
+	public static void validate(ProductDetailDTO product) throws ValidationException {
 		if (product == null) {
 			throw new ValidationException("Invalid product input");
 		}
@@ -55,7 +55,7 @@ public class ProductValidator {
 	 * @throws ValidationException If the provided Product object or its properties
 	 *                             are invalid.
 	 */
-	public static void validate(Product product) throws Exception {
+	public static void validate(Product product) throws ValidationException {
 		if (product == null) {
 			throw new ValidationException("Invalid product input");
 		}
@@ -83,7 +83,7 @@ public class ProductValidator {
 	 * @throws ValidationException If the provided list of ProductPrice objects or
 	 *                             their properties are invalid.
 	 */
-	public static void validatePriceList(List<ProductPrice> priceList) throws Exception {
+	public static void validatePriceList(List<ProductPrice> priceList) throws ValidationException {
 		if (priceList.isEmpty()) {
 			throw new ValidationException("No price found");
 		}

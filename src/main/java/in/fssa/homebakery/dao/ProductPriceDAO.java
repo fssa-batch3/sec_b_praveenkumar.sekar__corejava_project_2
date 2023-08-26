@@ -224,7 +224,7 @@ public class ProductPriceDAO {
 		Set<ProductPrice> productPrices = new HashSet<>();
 
 		try {
-			String query = "SELECT id, product_id, quantity, type, start_date, end_date FROM product_prices";
+			String query = "SELECT id, product_id, quantity, price, type, start_date, end_date FROM product_prices";
 			conn = ConnectionUtil.getConnection();
 			stmt = conn.prepareStatement(query);
 
@@ -280,7 +280,7 @@ public class ProductPriceDAO {
 		ResultSet rs = null;
 
 		try {
-			String query = "SELECT id, product_id, quantity, type, start_date, end_date FROM product_prices WHERE product_id = ? AND end_date IS null";
+			String query = "SELECT id, product_id, quantity, price,type, start_date, end_date FROM product_prices WHERE product_id = ? AND end_date IS null";
 			conn = ConnectionUtil.getConnection();
 			stmt = conn.prepareStatement(query);
 			stmt.setInt(1, id);
@@ -337,7 +337,7 @@ public class ProductPriceDAO {
 		ProductPrice productPrice = null;
 
 		try {
-			String query = "SELECT id, product_id, quantity, type, start_date, end_date FROM product_prices WHERE id = ?";
+			String query = "SELECT id, product_id, quantity, price, type, start_date, end_date FROM product_prices WHERE id = ?";
 			conn = ConnectionUtil.getConnection();
 			stmt = conn.prepareStatement(query);
 			stmt.setInt(1, id);
@@ -393,7 +393,7 @@ public class ProductPriceDAO {
 		ResultSet rs = null;
 
 		try {
-			String query = "SELECT id, product_id, quantity, type, start_date, end_date FROM product_prices WHERE product_id = ? AND end_date IS NULL";
+			String query = "SELECT id, product_id, quantity, price, type, start_date, end_date FROM product_prices WHERE product_id = ? AND end_date IS NULL";
 			conn = ConnectionUtil.getConnection();
 			stmt = conn.prepareStatement(query);
 			stmt.setInt(1, productId);

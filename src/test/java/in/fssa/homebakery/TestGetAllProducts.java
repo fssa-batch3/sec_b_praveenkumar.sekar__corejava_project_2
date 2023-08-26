@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import in.fssa.homebakery.dto.ProductDetailDTO;
@@ -16,6 +17,7 @@ import in.fssa.homebakery.service.ProductService;
 public class TestGetAllProducts {
 
 	@Test
+	@Order(1)
 	public void getAllProducts() {
 		ProductService productService = new ProductService(); // Replace with your actual service class
 
@@ -29,6 +31,7 @@ public class TestGetAllProducts {
 	}
 	
 	@Test
+	@Order(2)
 	public void getAllProductByValidId() {
 		ProductService productService = new ProductService();// Replace with your actual service class
 		
@@ -42,6 +45,7 @@ public class TestGetAllProducts {
 	}
 	
 	@Test
+	@Order(3)
 	public void getProductByInvalidId() {
 		ProductService productService = new ProductService();// Replace with your actual service class
 		
@@ -59,6 +63,7 @@ public class TestGetAllProducts {
 	}
 	
 	@Test
+	@Order(4)
 	public void getProductByIdOfNonExistingProduct() {
 		ProductService productService = new ProductService();// Replace with your actual service class
 		
@@ -76,6 +81,7 @@ public class TestGetAllProducts {
 	}
 	
 	@Test
+	@Order(5)
 	public void getProductsByValidCategoryId() {
 		ProductService productService = new ProductService(); // Replace with your actual service class
 		
@@ -91,6 +97,7 @@ public class TestGetAllProducts {
 	}
 	
 	@Test
+	@Order(6)
 	public void getProductByInvalidCategoryId() {
 		ProductService productService = new ProductService();// Replace with your actual service class
 		

@@ -137,6 +137,8 @@ public class TestUpdateProduct {
 
 		String expectedMessage = "Description cannot be null or empty";
 		String actualMessage = exception.getMessage();
+		
+		System.out.println(actualMessage);
 
 		assertTrue(expectedMessage.equals(actualMessage));
 	}

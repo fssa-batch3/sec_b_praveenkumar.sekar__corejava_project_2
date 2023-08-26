@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import in.fssa.homebakery.exception.ValidationException;
@@ -13,6 +14,7 @@ import in.fssa.homebakery.service.CategoryService;
 public class TestUpdateCategory {
 
 	@Test
+	@Order(1)
 	public void testUpdateCategoryWithValidData() {
 		CategoryService categoryService = new CategoryService();
 		Category updatedCategory = new Category();
@@ -24,7 +26,9 @@ public class TestUpdateCategory {
 		});
 	}
 
+	
 	@Test
+	@Order(2)
 	public void testUpdateCategoryWithInvalidData() {
 		CategoryService categoryService = new CategoryService();
 		Category updatedCategory = new Category();

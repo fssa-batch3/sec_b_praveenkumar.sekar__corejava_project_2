@@ -17,7 +17,7 @@ public class PriceValidator {
 	 * @throws ValidationException If the ProductPrice object or its properties are
 	 *                             invalid.
 	 */
-	public static void validate(ProductPrice price) throws Exception {
+	public static void validate(ProductPrice price) throws ValidationException {
 		if (price == null) {
 			throw new ValidationException("Price cannot be null");
 		}
@@ -42,7 +42,7 @@ public class PriceValidator {
 	 * @throws ValidationException If the quantity value is invalid (not greater
 	 *                             than zero).
 	 */
-	public static void validateQuantity(double quantity) throws Exception {
+	public static void validateQuantity(double quantity) throws ValidationException {
 		if (quantity <= 0.0) {
 			throw new ValidationException("Invalid Quantity");
 		}

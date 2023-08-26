@@ -14,7 +14,7 @@ public class TestDeleteProduct {
 	public void testDeleteProductWithValidId() {
 		ProductService prodService = new ProductService();
 
-		int id = 2;
+		int id = 4;
 
 		assertDoesNotThrow(() -> {
 			prodService.deleteProduct(id);

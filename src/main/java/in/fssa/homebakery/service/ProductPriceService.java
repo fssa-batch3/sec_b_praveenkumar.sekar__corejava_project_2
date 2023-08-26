@@ -1,11 +1,14 @@
 package in.fssa.homebakery.service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import in.fssa.homebakery.dao.ProductDAO;
 import in.fssa.homebakery.dao.ProductPriceDAO;
 import in.fssa.homebakery.exception.PersistanceException;
+import in.fssa.homebakery.exception.ServiceException;
 import in.fssa.homebakery.exception.ValidationException;
 import in.fssa.homebakery.model.ProductPrice;
 import in.fssa.homebakery.util.IntUtil;
@@ -44,26 +47,31 @@ public class ProductPriceService {
 	 *                   message depend on the underlying validation and update
 	 *                   logic.
 	 */
-	public void updateProductPrice(int id, ProductPrice productPrice, double quantity) throws Exception {
+	public void updateProductPrice(int id, ProductPrice productPrice, double quantity) throws ValidationException, ServiceException{
 
-		IntUtil.rejectIfInvalidInt(id);
-		PriceValidator.validate(productPrice);
-		PriceValidator.validateQuantity(quantity);
-
-		boolean test = ProductDAO.productExists(id);
-		if (!test) {
-			throw new RuntimeException("Product does not exist");
+		try {
+			IntUtil.rejectIfInvalidInt(id);
+			PriceValidator.validate(productPrice);
+			PriceValidator.validateQuantity(quantity);
+			
+			boolean test = ProductDAO.productExists(id);
+			if (!test) {
+				throw new RuntimeException("Product does not exist");
+			}
+			
+			boolean check = ProductPriceDAO.quantityExistsForProduct(id, quantity);
+			
+			if (!check) {
+				throw new RuntimeException("Quantity does not exist");
+			}
+			ProductPriceDAO productPriceDAO = new ProductPriceDAO();
+			
+			productPriceDAO.setEndDate(id, quantity);
+			productPriceDAO.update(id, productPrice, quantity);
+		} catch (PersistanceException e) {
+			e.printStackTrace();
+			throw new ServiceException(e.getMessage());
 		}
-
-		boolean check = ProductPriceDAO.quantityExistsForProduct(id, quantity);
-
-		if (!check) {
-			throw new RuntimeException("Quantity does not exist");
-		}
-		ProductPriceDAO productPriceDAO = new ProductPriceDAO();
-
-		productPriceDAO.setEndDate(id, quantity);
-		productPriceDAO.update(id, productPrice, quantity);
 	}
 
 	/**
@@ -79,11 +87,17 @@ public class ProductPriceService {
 	 *         all product prices.
 	 * @throws PersistanceException 
 	 */
-	public Set<ProductPrice> findAllProductPrices() throws PersistanceException {
+	public Set<ProductPrice> findAllProductPrices() throws ServiceException{
 		ProductPriceDAO productPriceDAO = new ProductPriceDAO();
-		Set<ProductPrice> priceList = productPriceDAO.findAll();
-		for (ProductPrice price : priceList) {
-			System.out.println(price);
+		Set<ProductPrice> priceList = new HashSet<>();
+		try {
+			priceList = productPriceDAO.findAll();
+			for (ProductPrice price : priceList) {
+				System.out.println(price);
+			}
+		} catch (PersistanceException e) {
+			e.printStackTrace();
+			throw new ServiceException(e.getMessage());
 		}
 		return priceList;
 	}
@@ -108,24 +122,31 @@ public class ProductPriceService {
 	 *           prices.
 	 * @return A 'List' containing 'ProductPrice' objects representing the details
 	 *         of product prices associated with the specified product.
+	 * @throws ValidationException , ServiceException 
 	 * @throws Exception If the provided 'id' is not valid, if the product does not
 	 *                   exist, or if an error occurs during the database retrieval
 	 *                   process. The specific exception type and message depend on
 	 *                   the underlying validation and retrieval logic.
 	 */
-	public List<ProductPrice> findByProductId(int id) throws Exception {
-		IntUtil.rejectIfInvalidInt(id);
-		boolean test = ProductDAO.productExists(id);
-
-		if (!test) {
-			throw new RuntimeException("Product does not exist");
-		}
-
-		ProductPriceDAO productPriceDAO = new ProductPriceDAO();
-
-		List<ProductPrice> priceList = productPriceDAO.findByProductId(id);
-		for (ProductPrice price : priceList) {
-			System.out.println(price);
+	public List<ProductPrice> findByProductId(int id) throws ValidationException , ServiceException{
+		List<ProductPrice> priceList = new ArrayList<>();
+		try {
+			IntUtil.rejectIfInvalidInt(id);
+			boolean test = ProductDAO.productExists(id);
+			
+			if (!test) {
+				throw new RuntimeException("Product does not exist");
+			}
+			
+			ProductPriceDAO productPriceDAO = new ProductPriceDAO();
+			
+			priceList = productPriceDAO.findByProductId(id);
+			for (ProductPrice price : priceList) {
+				System.out.println(price);
+			}
+		} catch (PersistanceException e) {
+			e.printStackTrace();
+			throw new ServiceException(e.getMessage());
 		}
 		return priceList;
 	}
@@ -141,15 +162,21 @@ public class ProductPriceService {
 	 * @param id The ID of the product price entry to retrieve.
 	 * @return A 'ProductPrice' object representing the details of the retrieved
 	 *         product price entry.
+	 * @throws ValidationException 
 	 * @throws Exception If the provided 'id' is not valid or if an error occurs
 	 *                   during the database retrieval process. The specific
 	 *                   exception type and message depend on the underlying
 	 *                   validation and retrieval logic.
 	 */
-	public ProductPrice findByPriceId(int id) throws Exception {
-		IntUtil.rejectIfInvalidInt(id);
-		ProductPriceDAO productPriceDAO = new ProductPriceDAO();
-		return productPriceDAO.findById(id);
+	public ProductPrice findByPriceId(int id) throws ValidationException , ServiceException{
+		try {
+			IntUtil.rejectIfInvalidInt(id);
+			ProductPriceDAO productPriceDAO = new ProductPriceDAO();
+			return productPriceDAO.findById(id);
+		} catch (PersistanceException e) {
+			e.printStackTrace();
+			throw new ServiceException(e.getMessage());
+		}
 	}
 
 	/**
@@ -172,26 +199,32 @@ public class ProductPriceService {
 	 *                  product prices.
 	 * @return A 'List' containing 'ProductPrice' objects representing the current
 	 *         product prices for the specified product.
+	 * @throws ValidationException 
 	 * @throws Exception If the provided 'productId' is not valid, if the product
 	 *                   does not exist, or if an error occurs during the database
 	 *                   retrieval process. The specific exception type and message
 	 *                   depend on the underlying validation and retrieval logic.
 	 */
-	public List<ProductPrice> findCurrentPrice(int productId) throws Exception {
-		IntUtil.rejectIfInvalidInt(productId);
-		boolean test = ProductDAO.productExists(productId);
-
-		if (!test) {
-			throw new RuntimeException("Product does not exist");
+	public List<ProductPrice> findCurrentPrice(int productId) throws ServiceException, ValidationException{
+		try {
+			IntUtil.rejectIfInvalidInt(productId);
+			boolean test = ProductDAO.productExists(productId);
+			
+			if (!test) {
+				throw new RuntimeException("Product does not exist");
+			}
+			
+			ProductPriceDAO productPriceDAO = new ProductPriceDAO();
+			
+			List<ProductPrice> priceList = productPriceDAO.findCurrentPrice(productId);
+			for (ProductPrice price : priceList) {
+				System.out.println(price);
+			}
+			return priceList;
+		} catch (PersistanceException e) {
+			e.printStackTrace();
+			throw new ServiceException(e.getMessage());
 		}
-
-		ProductPriceDAO productPriceDAO = new ProductPriceDAO();
-
-		List<ProductPrice> priceList = productPriceDAO.findCurrentPrice(productId);
-		for (ProductPrice price : priceList) {
-			System.out.println(price);
-		}
-		return priceList;
 	}
 
 }

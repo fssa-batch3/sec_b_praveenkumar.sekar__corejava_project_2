@@ -3,6 +3,7 @@ package in.fssa.homebakery;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import in.fssa.homebakery.exception.ValidationException;
@@ -11,6 +12,7 @@ import in.fssa.homebakery.service.UserService;
 public class TestDeleteUser {
 
 	@Test
+	@Order(1)
 	public void deleteUserByValidId() {
 		UserService userService = new UserService();
 
@@ -22,6 +24,7 @@ public class TestDeleteUser {
 	}
 
 	@Test
+	@Order(2)
 	public void deleteUserByInvalidId() {
 		UserService userService = new UserService();
 
@@ -36,6 +39,7 @@ public class TestDeleteUser {
 	}
 	
 	@Test
+	@Order(3)
 	public void deleteUserByNonExistingId() {
 		UserService userService = new UserService();
 

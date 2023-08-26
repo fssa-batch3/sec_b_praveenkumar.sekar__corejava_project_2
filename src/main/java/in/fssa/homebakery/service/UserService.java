@@ -27,11 +27,11 @@ public class UserService {
 	 * @return A set containing all active users retrieved from the database.
 	 * @throws RuntimeException If an error occurs while querying the database.
 	 */
-	public Set<User> getAll() {
-		UserDAO userDao = new UserDAO();
+	public Set<User> getAllUsers() {
+		UserDAO userDAO = new UserDAO();
 		Set<User> userList = new HashSet<>();
 		try {
-			userList = userDao.findAll();
+			userList = userDAO.findAll();
 			for (User user : userList) {
 				System.out.println(user);
 			}
@@ -53,16 +53,16 @@ public class UserService {
 	 * @throws Exception If the provided user information is invalid or an error
 	 *                   occurs during database interaction.
 	 */
-	public void create(User newUser) throws ValidationException {
-		UserDAO userDao = new UserDAO();
+	public void createUser(User newUser) throws ValidationException, ServiceException {
+		UserDAO userDAO = new UserDAO();
 		try {
 			UserValidator.validate(newUser);
-			boolean check = userDao.isUserEmailPresent(newUser.getEmail());
+			boolean check = userDAO.isUserEmailPresent(newUser.getEmail());
 			
 			if(check) {
 				throw new RuntimeException("An account with the email already exists");
 			}
-			userDao.create(newUser);
+			userDAO.create(newUser);
 		} catch (PersistanceException e) {
 			e.printStackTrace();
 			throw new ServiceException(e.getMessage());
@@ -80,22 +80,28 @@ public class UserService {
 	 * @param id          The ID of the user whose information needs to be updated.
 	 * @param updatedUser The User object containing the updated details of the
 	 *                    user.
+	 * @throws ValidationException, ServiceException 
 	 * @throws Exception If the provided user ID is invalid, the user does not
 	 *                   exist, the updated user information is invalid, or an error
 	 *                   occurs during database interaction.
 	 */
-	public void update(int id, User updatedUser) throws Exception {
-		UserDAO userDao = new UserDAO();
+	public void updateUser(int id, User updatedUser) throws ValidationException, ServiceException{
 
-		IntUtil.rejectIfInvalidInt(id);
-
-		boolean check = UserDAO.isUserPresent(id);
-
-		if (!check) {
-			throw new RuntimeException("User does not exist");
+		try {
+			UserDAO userDAO = new UserDAO();
+			IntUtil.rejectIfInvalidInt(id);
+			boolean check = UserDAO.isUserPresent(id);
+			
+			if (!check) {
+				throw new RuntimeException("User does not exist");
+			}
+			UserValidator.validate(updatedUser);
+			userDAO.update(id, updatedUser);
+		} catch (PersistanceException e) {
+			e.printStackTrace();
+			throw new ServiceException(e.getMessage());
 		}
-		UserValidator.validate(updatedUser);
-		userDao.update(id, updatedUser);
+
 
 	}
 
@@ -112,20 +118,21 @@ public class UserService {
 	 * @throws RuntimeException    If the user does not exist or an error occurs
 	 *                             during database interaction.
 	 */
-	public void delete(int userId) throws ValidationException, PersistanceException {
+	public void deleteUser(int userId) throws ValidationException, ServiceException {
 
-		IntUtil.rejectIfInvalidInt(userId);
-
-		boolean check = UserDAO.isUserPresent(userId);
-
-		if (!check) {
-			throw new RuntimeException("User does not exist");
-		}
-		UserDAO userDao = new UserDAO();
 		try {
-			userDao.delete(userId);
+			UserDAO userDAO = new UserDAO();
+			userDAO.delete(userId);
+			IntUtil.rejectIfInvalidInt(userId);
+			
+			boolean check = UserDAO.isUserPresent(userId);
+			
+			if (!check) {
+				throw new RuntimeException("User does not exist");
+			}
 		} catch (PersistanceException e) {
 			e.printStackTrace();
+			throw new ServiceException(e.getMessage());
 		}
 	}
 
@@ -143,24 +150,25 @@ public class UserService {
 	 * @throws RuntimeException    If the user does not exist or an error occurs
 	 *                             during database interaction.
 	 */
-	public User findById(int userId) throws ValidationException, PersistanceException {
-		IntUtil.rejectIfInvalidInt(userId);
-
-		boolean check = UserDAO.isUserPresent(userId);
-
-		if (!check) {
-			throw new RuntimeException("User does not exist");
-		}
-
-		UserDAO userDao = new UserDAO();
-		User user = null;
+	public User findByUserId(int userId) throws ValidationException, ServiceException {
 		try {
-			user =  userDao.findById(userId);
+			IntUtil.rejectIfInvalidInt(userId);
+			
+			boolean check = UserDAO.isUserPresent(userId);
+			
+			if (!check) {
+				throw new RuntimeException("User does not exist");
+			}
+			
+			UserDAO userDAO = new UserDAO();
+			User user = null;
+			user =  userDAO.findById(userId);
+			return user;
 		} catch (PersistanceException e) {
 			e.printStackTrace();
+			throw new ServiceException(e.getMessage());
 		}
 		
-		return user;
 	}
 
 }
