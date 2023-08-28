@@ -270,12 +270,12 @@ public class ProductDAO {
 	 * Creates a new product in the database with the provided details.
 	 *
 	 * This method inserts a new product into the 'products' table in the database
-	 * using the information provided in the 'productDetailDto' parameter. If the
+	 * using the information provided in the 'productDetailDTO' parameter. If the
 	 * insertion is successful, a new product record is created, and the generated
 	 * product ID is returned. If any exception occurs during the process, it is
 	 * caught, and a RuntimeException is thrown.
 	 *
-	 * @param productDetailDto An instance of 'ProductDetailDTO' containing the
+	 * @param productDetailDTO An instance of 'ProductDetailDTO' containing the
 	 *                         details of the new product to be created. It should
 	 *                         include the product name, description, category ID,
 	 *                         and boolean values indicating whether the product is
@@ -287,7 +287,7 @@ public class ProductDAO {
 	 *                          process. The original exception is printed, and a
 	 *                          RuntimeException is thrown.
 	 */
-	public int create(ProductDetailDTO productDetailDto) throws PersistanceException {
+	public int create(ProductDetailDTO productDetailDTO) throws PersistanceException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		int productId = -1;
@@ -297,11 +297,11 @@ public class ProductDAO {
 			conn = ConnectionUtil.getConnection();
 			stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 
-			stmt.setString(1, productDetailDto.getName());
-			stmt.setString(2, productDetailDto.getDescription());
-			stmt.setInt(3, productDetailDto.getCategoryId());
-			stmt.setBoolean(4, productDetailDto.isVeg());
-			stmt.setBoolean(5, productDetailDto.isActive());
+			stmt.setString(1, productDetailDTO.getName());
+			stmt.setString(2, productDetailDTO.getDescription());
+			stmt.setInt(3, productDetailDTO.getCategoryId());
+			stmt.setBoolean(4, productDetailDTO.isVeg());
+			stmt.setBoolean(5, productDetailDTO.isActive());
 			stmt.executeUpdate();
 
 			System.out.println("Product has been successfully created");
