@@ -31,6 +31,7 @@ public class TestCreateProduct {
 		productDetailDto.setName("Banana cake");
 		productDetailDto.setDescription("You can sleep very good");
 		productDetailDto.setCategoryId(3);
+		productDetailDto.setImageUrl("https://picsum.photos/200");
 		productDetailDto.setVeg(false);
 		productDetailDto.setActive(true);
 
@@ -92,6 +93,7 @@ public class TestCreateProduct {
 		productDetailDto.setName("");
 		productDetailDto.setDescription("You can sleep very good");
 		productDetailDto.setCategoryId(3);
+		productDetailDto.setImageUrl("https://picsum.photos/200");
 		productDetailDto.setVeg(false);
 		productDetailDto.setActive(true);
 
@@ -142,6 +144,7 @@ public class TestCreateProduct {
 		productDetailDto.setName("Banana cake");
 		productDetailDto.setDescription(null);
 		productDetailDto.setCategoryId(3);
+		productDetailDto.setImageUrl("https://picsum.photos/200");
 		productDetailDto.setVeg(false);
 		productDetailDto.setActive(true);
 
@@ -192,6 +195,7 @@ public class TestCreateProduct {
 		productDetailDto.setName("Banana cake");
 		productDetailDto.setDescription("Hello");
 		productDetailDto.setCategoryId(3);
+		productDetailDto.setImageUrl("https://picsum.photos/200");
 		productDetailDto.setVeg(false);
 		productDetailDto.setActive(true);
 
@@ -215,6 +219,7 @@ public class TestCreateProduct {
 		productDetailDto.setName("Banana cake");
 		productDetailDto.setDescription("Hello");
 		productDetailDto.setCategoryId(3);
+		productDetailDto.setImageUrl("https://picsum.photos/200");
 		productDetailDto.setVeg(false);
 		productDetailDto.setActive(true);
 
@@ -241,6 +246,7 @@ public class TestCreateProduct {
 		productDetailDto.setName("Banana cake");
 		productDetailDto.setDescription("Hello");
 		productDetailDto.setCategoryId(3);
+		productDetailDto.setImageUrl("https://picsum.photos/200");
 		productDetailDto.setVeg(false);
 		productDetailDto.setActive(true);
 
@@ -270,6 +276,7 @@ public class TestCreateProduct {
 		productDetailDto.setName("Banana cake");
 		productDetailDto.setDescription("You can sleep very good");
 		productDetailDto.setCategoryId(4);
+		productDetailDto.setImageUrl("https://picsum.photos/200");
 		productDetailDto.setVeg(false);
 		productDetailDto.setActive(true);
 
@@ -310,4 +317,52 @@ public class TestCreateProduct {
 		
 		
 	}
+	
+	public void testCreateProductWithInvalidImageUrl() {
+		ProductService productService = new ProductService();
+		ProductDetailDTO productDetailDto = new ProductDetailDTO();
+		
+		productDetailDto.setName("Banana cake");
+		productDetailDto.setDescription("You can sleep very good");
+		productDetailDto.setCategoryId(2);
+		productDetailDto.setImageUrl(null);
+		productDetailDto.setVeg(false);
+		productDetailDto.setActive(true);
+
+		List<ProductPrice> priceList = new ArrayList<>();
+
+		ProductPrice price1 = new ProductPrice();
+		price1.setQuantity(1);
+		price1.setType(ProductPrice.QuantityType.KG);
+		price1.setPrice(10);
+		price1.setStartDate(currentTimestamp); // Set the start date
+
+		ProductPrice price2 = new ProductPrice();
+		price2.setQuantity(2);
+		price2.setType(ProductPrice.QuantityType.KG);
+		price2.setPrice(20);
+		price2.setStartDate(currentTimestamp); // Set the start date
+
+		ProductPrice price3 = new ProductPrice();
+		price3.setQuantity(3);
+		price3.setType(ProductPrice.QuantityType.KG);
+		price3.setPrice(30);
+		price3.setStartDate(currentTimestamp); // Set the start date
+
+		priceList.add(price1);
+		priceList.add(price2);
+		priceList.add(price3);
+
+		productDetailDto.setPrices(priceList);
+		
+		Exception exception = assertThrows(ValidationException.class, () -> {
+			productService.createProduct(productDetailDto);
+		});
+
+		String expectedMessage = "Image Url cannot be null or empty";
+		String actualMessage = exception.getMessage();
+
+		assertTrue(expectedMessage.equals(actualMessage));
+	}
+	
 }

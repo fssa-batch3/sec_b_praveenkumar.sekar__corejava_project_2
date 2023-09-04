@@ -280,7 +280,7 @@ public class ProductPriceDAO {
 		ResultSet rs = null;
 
 		try {
-			String query = "SELECT id, product_id, quantity, price,type, start_date, end_date FROM product_prices WHERE product_id = ? AND end_date IS null";
+			String query = "SELECT id, product_id, quantity, price,type, start_date, end_date FROM product_prices WHERE product_id = ?";
 			conn = ConnectionUtil.getConnection();
 			stmt = conn.prepareStatement(query);
 			stmt.setInt(1, id);
@@ -393,7 +393,7 @@ public class ProductPriceDAO {
 		ResultSet rs = null;
 
 		try {
-			String query = "SELECT id, product_id, quantity, price, type, start_date, end_date FROM product_prices WHERE product_id = ? AND end_date IS NULL";
+			String query = "SELECT id, product_id, quantity, price, type, start_date, end_date FROM product_prices WHERE product_id = ? AND end_date IS NULL ORDER BY quantity";
 			conn = ConnectionUtil.getConnection();
 			stmt = conn.prepareStatement(query);
 			stmt.setInt(1, productId);
@@ -416,6 +416,163 @@ public class ProductPriceDAO {
 			}
 
 			return currentPrices;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			throw new PersistanceException(e.getMessage());
+		} finally {
+			ConnectionUtil.close(conn, stmt, rs);
+		}
+	}
+	
+	/**
+	 * Retrieves the current prices for all products.
+	 *
+	 * This method queries the database to retrieve the current product prices for all products. It selects entries from
+	 * the "product_prices" table where the end date is not specified (i.e., still valid).
+	 *
+	 * @return A list of `ProductPrice` objects containing the current price details for all products.
+	 * @throws PersistenceException If there is an error while retrieving the product prices from the database.
+	 */
+	public List<ProductPrice> findCurrentPriceForAllProducts() throws PersistanceException {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			String query = "SELECT id, product_id, quantity, price, type, start_date, end_date FROM product_prices WHERE end_date IS NULL";
+			conn = ConnectionUtil.getConnection();
+			stmt = conn.prepareStatement(query);
+
+			rs = stmt.executeQuery();
+
+			List<ProductPrice> currentPrices = new ArrayList<>();
+
+			while (rs.next()) {
+				ProductPrice productPrice = new ProductPrice();
+				productPrice.setId(rs.getInt("id"));
+				productPrice.setProductId(rs.getInt("product_id"));
+				productPrice.setPrice(rs.getInt("price"));
+				productPrice.setQuantity(rs.getInt("quantity"));
+				productPrice.setType(QuantityType.valueOf(rs.getString("type").toUpperCase()));
+				productPrice.setStartDate(rs.getTimestamp("start_date"));
+				productPrice.setEndDate(rs.getTimestamp("end_date") != null ? rs.getTimestamp("end_date") : null);
+
+				currentPrices.add(productPrice);
+			}
+
+			return currentPrices;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			throw new PersistanceException(e.getMessage());
+		} finally {
+			ConnectionUtil.close(conn, stmt, rs);
+		}
+	}
+	
+	/**
+	 * Retrieves the current product price entries associated with a specific
+	 * product ID from the database.
+	 *
+	 * This method queries the database to retrieve the current product price
+	 * entries stored in the 'product_prices' table that are associated with the
+	 * provided product ID and have no end date set (i.e., the pricing period is
+	 * ongoing). For each matching current product price entry, a 'ProductPrice'
+	 * object is created, populated with the retrieved data, and added to a 'List'.
+	 * The list is then returned, containing details of current product price
+	 * entries for the given product ID. If any exception occurs during the process,
+	 * it is caught, and a RuntimeException is thrown.
+	 *
+	 * @param productId The ID of the product for which the associated current
+	 *                  product price entries are being retrieved.
+	 * @return A 'List' containing 'ProductPrice' objects representing details of
+	 *         current product price entries associated with the given product ID.
+	 * @throws PersistanceException 
+	 * @throws RuntimeException If an error occurs during the database retrieval
+	 *                          process. The original exception is printed, and a
+	 *                          RuntimeException is thrown.
+	 */
+	public List<ProductPrice> findPricesByQuantity(int quantity) throws PersistanceException {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			String query = "SELECT id, product_id, quantity, price, type, start_date, end_date FROM product_prices WHERE quantity = ? end_date IS NULL";
+			conn = ConnectionUtil.getConnection();
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, quantity);
+
+			rs = stmt.executeQuery();
+
+			List<ProductPrice> currentPrices = new ArrayList<>();
+
+			while (rs.next()) {
+				ProductPrice productPrice = new ProductPrice();
+				productPrice.setId(rs.getInt("id"));
+				productPrice.setProductId(rs.getInt("product_id"));
+				productPrice.setPrice(rs.getInt("price"));
+				productPrice.setQuantity(rs.getInt("quantity"));
+				productPrice.setType(QuantityType.valueOf(rs.getString("type").toUpperCase()));
+				productPrice.setStartDate(rs.getTimestamp("start_date"));
+				productPrice.setEndDate(rs.getTimestamp("end_date") != null ? rs.getTimestamp("end_date") : null);
+
+				currentPrices.add(productPrice);
+			}
+
+			return currentPrices;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			throw new PersistanceException(e.getMessage());
+		} finally {
+			ConnectionUtil.close(conn, stmt, rs);
+		}
+	}
+	
+	/**
+	 * Finds the product price based on the product ID and quantity.
+	 *
+	 * This method retrieves the product price details from the database for a given product identified by its unique
+	 * identifier and a specified quantity. It queries the database to find a matching product price based on the quantity
+	 * and product ID, where the end date is not specified (i.e., still valid).
+	 *
+	 * @param productId The unique identifier of the product for which the price is being fetched.
+	 * @param quantity The quantity for which the price is being fetched.
+	 * @return The `ProductPrice` object containing the price details for the specified product and quantity, or `null`
+	 *         if no matching price is found.
+	 * @throws PersistenceException If there is an error while retrieving the product price details from the database.
+	 */
+	public ProductPrice findPriceByIdAndQuantity(int productId, int quantity) throws PersistanceException {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		ProductPrice productPrice = null;
+
+		try {
+			String query = "SELECT id, product_id, quantity, price, type, start_date, end_date FROM product_prices WHERE quantity = ? AND product_id = ? AND end_date IS NULL";
+			conn = ConnectionUtil.getConnection();
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, quantity);
+			stmt.setInt(2, productId);
+
+			rs = stmt.executeQuery();
+			
+
+			if (rs.next()) {
+				productPrice = new ProductPrice();
+				productPrice.setId(rs.getInt("id"));
+				productPrice.setProductId(rs.getInt("product_id"));
+				productPrice.setPrice(rs.getInt("price"));
+				productPrice.setQuantity(rs.getInt("quantity"));
+				productPrice.setType(QuantityType.valueOf(rs.getString("type").toUpperCase()));
+				productPrice.setStartDate(rs.getTimestamp("start_date"));
+				productPrice.setEndDate(rs.getTimestamp("end_date") != null ? rs.getTimestamp("end_date") : null);
+			}
+
+			return productPrice;
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());

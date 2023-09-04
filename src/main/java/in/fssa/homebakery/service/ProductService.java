@@ -117,7 +117,7 @@ public class ProductService {
 	 *         product along with its associated product prices.
 	 * @throws PersistanceException 
 	 */
-	public Set<ProductDetailDTO> getAllProducts()throws ValidationException, ServiceException {
+	public Set<ProductDetailDTO> getAllProducts(){
 
 		Set<ProductDetailDTO> productList;
 		try {
@@ -166,7 +166,7 @@ public class ProductService {
 			
 			ProductDetailDTO product = productDAO.findById(id);
 			if (product != null) {
-				List<ProductPrice> prices = productPriceDAO.findByProductId(product.getId());
+				List<ProductPrice> prices = productPriceDAO.findCurrentPrice(product.getId());
 				product.setPrices(prices);
 			}
 			return product;
@@ -206,7 +206,7 @@ public class ProductService {
 			
 			List<ProductDetailDTO> productList = productDAO.findByCategoryId(categoryId);
 			for (ProductDetailDTO product : productList) {
-				List<ProductPrice> prices = productPriceDAO.findByProductId(product.getId());
+				List<ProductPrice> prices = productPriceDAO.findCurrentPrice(product.getId());
 				product.setPrices(prices);
 			}
 			return productList;

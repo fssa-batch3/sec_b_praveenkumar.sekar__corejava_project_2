@@ -9,10 +9,16 @@ public class ProductEntity {
 	private String name;
 	private String description;
 	private int categoryId;
-//	private List<ProductPrice> price;   //  {  id, name, desc, category_id, [ { 500g, 10},{1kg, 20}, {2kg, 30} ]  }
 	private boolean isVeg;
 	private boolean isActive;
+	private String imageUrl;
 	
+	public String getImageUrl() {
+		return imageUrl;
+	}
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 	public int getId() {
 		return id;
 	}

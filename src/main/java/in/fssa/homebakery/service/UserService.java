@@ -122,8 +122,8 @@ public class UserService {
 
 		try {
 			UserDAO userDAO = new UserDAO();
-			userDAO.delete(userId);
 			IntUtil.rejectIfInvalidInt(userId);
+			userDAO.delete(userId);
 			
 			boolean check = UserDAO.isUserPresent(userId);
 			

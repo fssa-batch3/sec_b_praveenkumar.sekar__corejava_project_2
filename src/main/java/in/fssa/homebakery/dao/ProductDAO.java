@@ -41,16 +41,17 @@ public class ProductDAO {
 		PreparedStatement stmt = null;
 
 		try {
-			String query = "UPDATE products SET product_name = ?, description = ?, category_id = ?, is_veg = ?, is_active = ? WHERE id = ?";
+			String query = "UPDATE products SET product_name = ?, description = ?, category_id = ?, image_url = ?,is_veg = ?, is_active = ? WHERE id = ?";
 			conn = ConnectionUtil.getConnection();
 			stmt = conn.prepareStatement(query);
 
 			stmt.setString(1, newProduct.getProductName());
 			stmt.setString(2, newProduct.getDescription());
 			stmt.setInt(3, newProduct.getCategoryId());
-			stmt.setBoolean(4, newProduct.isVeg());
-			stmt.setBoolean(5, newProduct.isActive());
-			stmt.setInt(6, id);
+			stmt.setString(4, newProduct.getImageUrl());
+			stmt.setBoolean(5, newProduct.isVeg());
+			stmt.setBoolean(6, newProduct.isActive());
+			stmt.setInt(7, id);
 
 			stmt.executeUpdate();
 
@@ -129,7 +130,7 @@ public class ProductDAO {
 		ResultSet rs = null;
 
 		try {
-			String query = "SELECT id, product_name, description, category_id, is_veg FROM products WHERE is_active = 1";
+			String query = "SELECT id, product_name, description, category_id, image_url, is_veg FROM products WHERE is_active = 1";
 			conn = ConnectionUtil.getConnection();
 			ps = conn.prepareStatement(query);
 			rs = ps.executeQuery();
@@ -140,6 +141,7 @@ public class ProductDAO {
 				product.setName(rs.getString("product_name"));
 				product.setDescription(rs.getString("description"));
 				product.setCategoryId(rs.getInt("category_id"));
+				product.setImageUrl(rs.getString("image_url"));
 				product.setVeg(rs.getBoolean("is_veg"));
 				setOfUser.add(product);
 			}
@@ -181,7 +183,7 @@ public class ProductDAO {
 		ResultSet rs = null;
 
 		try {
-			String query = "SELECT id, product_name, description, category_id, is_veg FROM products WHERE is_active = 1 AND id = ?";
+			String query = "SELECT id, product_name, description, category_id, image_url, is_veg FROM products WHERE is_active = 1 AND id = ?";
 			conn = ConnectionUtil.getConnection();
 			ps = conn.prepareStatement(query);
 
@@ -195,6 +197,7 @@ public class ProductDAO {
 				product.setName(rs.getString("product_name"));
 				product.setDescription(rs.getString("description"));
 				product.setCategoryId(rs.getInt("category_id"));
+				product.setImageUrl(rs.getString("image_url"));
 				product.setVeg(rs.getBoolean("is_veg"));
 			}
 
@@ -237,7 +240,7 @@ public class ProductDAO {
 		ResultSet rs = null;
 
 		try {
-			String query = "SELECT id, product_name, description, category_id, is_veg FROM products WHERE is_active = 1 AND category_id = ?";
+			String query = "SELECT id, product_name, description, category_id, image_url, is_veg FROM products WHERE is_active = 1 AND category_id = ?";
 			conn = ConnectionUtil.getConnection();
 			ps = conn.prepareStatement(query);
 
@@ -251,8 +254,8 @@ public class ProductDAO {
 				product.setName(rs.getString("product_name"));
 				product.setDescription(rs.getString("description"));
 				product.setCategoryId(rs.getInt("category_id"));
+				product.setImageUrl(rs.getString("image_url"));
 				product.setVeg(rs.getBoolean("is_veg"));
-				product.setActive(rs.getBoolean("is_active"));
 				productList.add(product);
 			}
 
@@ -293,15 +296,16 @@ public class ProductDAO {
 		int productId = -1;
 
 		try {
-			String query = "INSERT INTO products (product_name, description, category_id, is_veg, is_active) VALUES (?, ?, ?, ?, ?)";
+			String query = "INSERT INTO products (product_name, description, category_id, image_url, is_veg, is_active) VALUES (?, ?, ?, ?, ?, ?)";
 			conn = ConnectionUtil.getConnection();
 			stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 
 			stmt.setString(1, productDetailDTO.getName());
 			stmt.setString(2, productDetailDTO.getDescription());
 			stmt.setInt(3, productDetailDTO.getCategoryId());
-			stmt.setBoolean(4, productDetailDTO.isVeg());
-			stmt.setBoolean(5, productDetailDTO.isActive());
+			stmt.setString(4, productDetailDTO.getImageUrl());
+			stmt.setBoolean(5, productDetailDTO.isVeg());
+			stmt.setBoolean(6, productDetailDTO.isActive());
 			stmt.executeUpdate();
 
 			System.out.println("Product has been successfully created");

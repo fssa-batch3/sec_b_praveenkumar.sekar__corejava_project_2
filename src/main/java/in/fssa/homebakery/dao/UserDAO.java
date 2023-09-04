@@ -81,14 +81,16 @@ public class UserDAO implements UserInterface {
 		PreparedStatement ps = null;
 
 		try {
-			String query = "UPDATE users SET first_name = ? , last_name = ? , phone_no = ? WHERE is_active = 1 AND id = ?";
+			String query = "UPDATE users SET first_name = ? , last_name = ? , phone_no = ? , password = ? , email = ? WHERE is_active = 1 AND id = ?";
 			conn = ConnectionUtil.getConnection();
 			ps = conn.prepareStatement(query);
 
 			ps.setString(1, updatedUser.getFirstName());
 			ps.setString(2, updatedUser.getLastName());
 			ps.setLong(3, updatedUser.getPhoneNo());
-			ps.setInt(4, id);
+			ps.setString(4, updatedUser.getPassword());
+			ps.setString(5, updatedUser.getEmail());
+			ps.setInt(6, id);
 			ps.executeUpdate();
 
 			System.out.println("User has been successfully updated");
@@ -178,8 +180,6 @@ public class UserDAO implements UserInterface {
 				user.setLastName(rs.getString("last_name"));
 				user.setEmail(rs.getString("email"));
 				user.setPhoneNo(rs.getLong("phone_no"));
-				user.setActive(rs.getBoolean("is_active"));
-				user.setPassword(rs.getString("password"));
 				setOfUser.add(user);
 			}
 
@@ -220,7 +220,7 @@ public class UserDAO implements UserInterface {
 		ResultSet rs = null;
 
 		try {
-			String query = "SELECT id, first_name, last_name, email, phone_no FROM users WHERE is_active = 1 AND id = ?";
+			String query = "SELECT id, first_name, last_name, email, phone_no, password FROM users WHERE is_active = 1 AND id = ?";
 			conn = ConnectionUtil.getConnection();
 			ps = conn.prepareStatement(query);
 
@@ -235,7 +235,6 @@ public class UserDAO implements UserInterface {
 				user.setLastName(rs.getString("last_name"));
 				user.setEmail(rs.getString("email"));
 				user.setPhoneNo(rs.getLong("phone_no"));
-				user.setActive(rs.getBoolean("is_active"));
 				user.setPassword(rs.getString("password"));
 			}
 

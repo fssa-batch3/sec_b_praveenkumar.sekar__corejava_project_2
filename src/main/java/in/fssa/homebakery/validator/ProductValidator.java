@@ -39,6 +39,7 @@ public class ProductValidator {
 
 		StringUtil.rejectIfInvalidString(product.getName(), "Product Name");
 		StringUtil.rejectIfInvalidString(product.getDescription(), "Description");
+		StringUtil.rejectIfInvalidString(product.getImageUrl(), "Image Url");
 
 	}
 

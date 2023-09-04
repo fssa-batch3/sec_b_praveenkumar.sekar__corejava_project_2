@@ -22,9 +22,9 @@ public class TestUpdateProductPrice {
 		// Arrange
 		int productId = 1;
 		ProductPrice productPrice = new ProductPrice();
-		productPrice.setQuantity(2);
+		productPrice.setQuantity(1);
 		productPrice.setType(ProductPrice.QuantityType.KG);
-		productPrice.setPrice(10);
+		productPrice.setPrice(1000);
 		double quantity = 2.0;
 
 		// Act and Assert

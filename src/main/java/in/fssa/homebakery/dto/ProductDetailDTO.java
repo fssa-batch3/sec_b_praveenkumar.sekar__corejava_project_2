@@ -12,6 +12,16 @@ public class ProductDetailDTO {
 	private int categoryId;
 	private boolean isVeg;
 	private boolean isActive;
+	private String imageUrl;
+	
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 
 	private List<ProductPrice> priceList;
 
