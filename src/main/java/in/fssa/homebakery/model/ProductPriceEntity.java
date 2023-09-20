@@ -12,7 +12,7 @@ public class ProductPriceEntity {
 	}
 	
 	private int id;
-	private int quantity;
+	private double quantity;
 	private int productId;
 	private QuantityType type;
 	private double price;
@@ -49,11 +49,11 @@ public class ProductPriceEntity {
 		this.id = id;
 	}
 	
-	public int getQuantity() {
+	public double getQuantity() {
 		return quantity;
 	}
 	
-	public void setQuantity(int quantity) {
+	public void setQuantity(double quantity) {
 		this.quantity = quantity;
 	}
 	

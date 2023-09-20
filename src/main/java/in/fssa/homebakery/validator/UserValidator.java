@@ -75,4 +75,12 @@ public class UserValidator {
 		}
 
 	}
+	
+	public static boolean validateEmail (String email) {
+		if (email == null || "".equals(email.trim())) {
+			return false;
+		}
+
+		return true;
+	}
 }

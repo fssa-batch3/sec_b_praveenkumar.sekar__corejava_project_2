@@ -13,6 +13,7 @@ import in.fssa.homebakery.exception.ValidationException;
 import in.fssa.homebakery.model.User;
 import in.fssa.homebakery.util.ConnectionUtil;
 import in.fssa.homebakery.util.IntUtil;
+import in.fssa.homebakery.util.StringUtil;
 import in.fssa.homebakery.validator.UserValidator;
 
 public class UserService {
@@ -163,6 +164,27 @@ public class UserService {
 			UserDAO userDAO = new UserDAO();
 			User user = null;
 			user =  userDAO.findById(userId);
+			return user;
+		} catch (PersistanceException e) {
+			e.printStackTrace();
+			throw new ServiceException(e.getMessage());
+		}
+		
+	}
+	
+	public User findByEmail(String email) throws ValidationException, ServiceException {
+		try {
+			UserValidator.validateEmail(email);
+			
+			boolean check = UserDAO.isUserEmailPresent(email);
+			
+			if (!check) {
+				throw new RuntimeException("User does not exist");
+			}
+			
+			UserDAO userDAO = new UserDAO();
+			User user = null;
+			user =  userDAO.findByEmail(email);
 			return user;
 		} catch (PersistanceException e) {
 			e.printStackTrace();

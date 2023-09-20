@@ -127,7 +127,6 @@ public class ProductService {
 			for (ProductDetailDTO product : productList) {
 				List<ProductPrice> prices = productPriceDAO.findByProductId(product.getId());
 				product.setPrices(prices);
-				System.out.println(product);
 			}
 			return productList;
 		} catch (PersistanceException e) {
@@ -166,7 +165,7 @@ public class ProductService {
 			
 			ProductDetailDTO product = productDAO.findById(id);
 			if (product != null) {
-				List<ProductPrice> prices = productPriceDAO.findCurrentPrice(product.getId());
+				List<ProductPrice> prices = productPriceDAO.findByProductId(product.getId());
 				product.setPrices(prices);
 			}
 			return product;

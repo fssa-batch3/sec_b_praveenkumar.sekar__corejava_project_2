@@ -49,7 +49,7 @@ public class ProductPriceDAO {
 
 			stmt.setInt(1, productId);
 			stmt.setDouble(2, newPrice.getPrice());
-			stmt.setInt(3, newPrice.getQuantity());
+			stmt.setDouble(3, newPrice.getQuantity());
 			stmt.setString(4, newPrice.getType().toString());
 			stmt.setTimestamp(5, newPrice.getStartDate());
 			stmt.executeUpdate();
@@ -116,26 +116,26 @@ public class ProductPriceDAO {
 		}
 	}
 	
-	public void delete(int productId) throws PersistanceException {
+	public void delete(int priceId) throws PersistanceException {
 	    Connection conn = null;
 	    PreparedStatement stmt = null;
 
 	    try {
-	        String query = "UPDATE product_prices SET end_date = ? WHERE product_id = ? AND end_date IS NULL";
+	        String query = "UPDATE product_prices SET end_date = ? WHERE id = ? AND end_date IS NULL";
 	        conn = ConnectionUtil.getConnection();
 	        stmt = conn.prepareStatement(query);
 
 	        // Set the parameters for the prepared statement
 	        stmt.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
-	        stmt.setInt(2, productId);
+	        stmt.setInt(2, priceId);
 
 	        // Execute the update
 	        int rowsUpdated = stmt.executeUpdate();
 
 	        if (rowsUpdated > 0) {
-	            System.out.println("Rows with null end_date have been updated for productId: " + productId);
+	            System.out.println("Rows with null end_date have been updated for productId: " + priceId);
 	        } else {
-	            System.out.println("No matching rows found with productId: " + productId
+	            System.out.println("No matching rows found with productId: " + priceId
 	                    + " or all rows already have end_date set.");
 	        }
 	    } catch (SQLException e) {
@@ -234,7 +234,7 @@ public class ProductPriceDAO {
 				productPrice.setId(rs.getInt("id"));
 				productPrice.setProductId(rs.getInt("product_id"));
 				productPrice.setPrice(rs.getInt("price"));
-				productPrice.setQuantity(rs.getInt("quantity"));
+				productPrice.setQuantity(rs.getDouble("quantity"));
 				productPrice.setType(QuantityType.valueOf(rs.getString("type").toUpperCase()));
 				productPrice.setStartDate(rs.getTimestamp("start_date"));
 				productPrice.setEndDate(rs.getTimestamp("end_date") != null ? rs.getTimestamp("end_date") : null);
@@ -293,7 +293,7 @@ public class ProductPriceDAO {
 				productPrice.setId(rs.getInt("id"));
 				productPrice.setProductId(rs.getInt("product_id"));
 				productPrice.setPrice(rs.getInt("price"));
-				productPrice.setQuantity(rs.getInt("quantity"));
+				productPrice.setQuantity(rs.getDouble("quantity"));
 				productPrice.setType(QuantityType.valueOf(rs.getString("type").toUpperCase()));
 				productPrice.setStartDate(rs.getTimestamp("start_date"));
 				productPrice.setEndDate(rs.getTimestamp("end_date") != null ? rs.getTimestamp("end_date") : null);
@@ -349,7 +349,7 @@ public class ProductPriceDAO {
 				productPrice.setId(rs.getInt("id"));
 				productPrice.setProductId(rs.getInt("product_id"));
 				productPrice.setPrice(rs.getInt("price"));
-				productPrice.setQuantity(rs.getInt("quantity"));
+				productPrice.setQuantity(rs.getDouble("quantity"));
 				productPrice.setType(QuantityType.valueOf(rs.getString("type").toUpperCase()));
 				productPrice.setStartDate(rs.getTimestamp("start_date"));
 				productPrice.setEndDate(rs.getTimestamp("end_date") != null ? rs.getTimestamp("end_date") : null);
@@ -407,7 +407,7 @@ public class ProductPriceDAO {
 				productPrice.setId(rs.getInt("id"));
 				productPrice.setProductId(rs.getInt("product_id"));
 				productPrice.setPrice(rs.getInt("price"));
-				productPrice.setQuantity(rs.getInt("quantity"));
+				productPrice.setQuantity(rs.getDouble("quantity"));
 				productPrice.setType(QuantityType.valueOf(rs.getString("type").toUpperCase()));
 				productPrice.setStartDate(rs.getTimestamp("start_date"));
 				productPrice.setEndDate(rs.getTimestamp("end_date") != null ? rs.getTimestamp("end_date") : null);
@@ -453,7 +453,7 @@ public class ProductPriceDAO {
 				productPrice.setId(rs.getInt("id"));
 				productPrice.setProductId(rs.getInt("product_id"));
 				productPrice.setPrice(rs.getInt("price"));
-				productPrice.setQuantity(rs.getInt("quantity"));
+				productPrice.setQuantity(rs.getDouble("quantity"));
 				productPrice.setType(QuantityType.valueOf(rs.getString("type").toUpperCase()));
 				productPrice.setStartDate(rs.getTimestamp("start_date"));
 				productPrice.setEndDate(rs.getTimestamp("end_date") != null ? rs.getTimestamp("end_date") : null);
@@ -493,7 +493,7 @@ public class ProductPriceDAO {
 	 *                          process. The original exception is printed, and a
 	 *                          RuntimeException is thrown.
 	 */
-	public List<ProductPrice> findPricesByQuantity(int quantity) throws PersistanceException {
+	public List<ProductPrice> findPricesByQuantity(double quantity) throws PersistanceException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -502,7 +502,7 @@ public class ProductPriceDAO {
 			String query = "SELECT id, product_id, quantity, price, type, start_date, end_date FROM product_prices WHERE quantity = ? end_date IS NULL";
 			conn = ConnectionUtil.getConnection();
 			stmt = conn.prepareStatement(query);
-			stmt.setInt(1, quantity);
+			stmt.setDouble(1, quantity);
 
 			rs = stmt.executeQuery();
 
@@ -513,7 +513,7 @@ public class ProductPriceDAO {
 				productPrice.setId(rs.getInt("id"));
 				productPrice.setProductId(rs.getInt("product_id"));
 				productPrice.setPrice(rs.getInt("price"));
-				productPrice.setQuantity(rs.getInt("quantity"));
+				productPrice.setQuantity(rs.getDouble("quantity"));
 				productPrice.setType(QuantityType.valueOf(rs.getString("type").toUpperCase()));
 				productPrice.setStartDate(rs.getTimestamp("start_date"));
 				productPrice.setEndDate(rs.getTimestamp("end_date") != null ? rs.getTimestamp("end_date") : null);
@@ -544,7 +544,7 @@ public class ProductPriceDAO {
 	 *         if no matching price is found.
 	 * @throws PersistenceException If there is an error while retrieving the product price details from the database.
 	 */
-	public ProductPrice findPriceByIdAndQuantity(int productId, int quantity) throws PersistanceException {
+	public ProductPrice findPriceByIdAndQuantity(int productId, double quantity) throws PersistanceException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -554,7 +554,7 @@ public class ProductPriceDAO {
 			String query = "SELECT id, product_id, quantity, price, type, start_date, end_date FROM product_prices WHERE quantity = ? AND product_id = ? AND end_date IS NULL";
 			conn = ConnectionUtil.getConnection();
 			stmt = conn.prepareStatement(query);
-			stmt.setInt(1, quantity);
+			stmt.setDouble(1, quantity);
 			stmt.setInt(2, productId);
 
 			rs = stmt.executeQuery();
@@ -565,7 +565,7 @@ public class ProductPriceDAO {
 				productPrice.setId(rs.getInt("id"));
 				productPrice.setProductId(rs.getInt("product_id"));
 				productPrice.setPrice(rs.getInt("price"));
-				productPrice.setQuantity(rs.getInt("quantity"));
+				productPrice.setQuantity(rs.getDouble("quantity"));
 				productPrice.setType(QuantityType.valueOf(rs.getString("type").toUpperCase()));
 				productPrice.setStartDate(rs.getTimestamp("start_date"));
 				productPrice.setEndDate(rs.getTimestamp("end_date") != null ? rs.getTimestamp("end_date") : null);
@@ -623,6 +623,32 @@ public class ProductPriceDAO {
 							// exist
 		} catch (SQLException e) {
 			e.printStackTrace();
+			System.out.println(e.getMessage());
+			throw new PersistanceException(e.getMessage());
+		} finally {
+			ConnectionUtil.close(conn, stmt, rs);
+		}
+	}
+	
+	public static boolean priceExists(int priceId) throws PersistanceException {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			String query = "SELECT 1 FROM product_prices WHERE id = ?";
+			conn = ConnectionUtil.getConnection();
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, priceId);
+
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				int count = rs.getInt(1);
+				return count > 0; // If count > 0, category exists
+			}
+
+			return false; // No rows returned, category does not exist
+		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			throw new PersistanceException(e.getMessage());
 		} finally {

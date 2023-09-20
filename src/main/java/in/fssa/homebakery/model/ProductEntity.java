@@ -1,8 +1,5 @@
 package in.fssa.homebakery.model;
 
-import java.util.List;
-import java.util.Set;
-
 public class ProductEntity {
 	
 	private int id;

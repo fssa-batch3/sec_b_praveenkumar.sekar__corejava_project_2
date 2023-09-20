@@ -42,6 +42,12 @@ public class ProductPriceService {
 				throw new RuntimeException("Product does not exist");
 			}
 			
+			boolean check = ProductPriceDAO.quantityExistsForProduct(productId, productPrice.getQuantity());
+
+			if (check) {
+				throw new RuntimeException("Quantity already exist for product");
+			}
+			
 			ProductPriceDAO productPriceDAO = new ProductPriceDAO();
 			
 			productPriceDAO.create(productPrice,productId);
@@ -108,6 +114,30 @@ public class ProductPriceService {
 			e.printStackTrace();
 			throw new ServiceException(e.getMessage());
 		}
+	}
+	
+	public void deleteProductPrice(int productPriceId) throws ValidationException, ServiceException {
+		
+		try {
+			IntUtil.rejectIfInvalidInt(productPriceId);
+			
+			boolean check = ProductPriceDAO.priceExists(productPriceId);
+			
+			if(!check) {
+				throw new RuntimeException("Price does not exist");
+			}
+			
+			ProductPriceDAO productPriceDAO = new ProductPriceDAO();
+			
+			productPriceDAO.delete(productPriceId);
+			System.out.println("Price has been deleted successfully");
+			
+			
+		} catch (PersistanceException e) {
+			e.printStackTrace();
+			throw new ServiceException(e.getMessage());
+		}
+
 	}
 
 	/**
@@ -318,16 +348,16 @@ public class ProductPriceService {
 	 * provided product exists before attempting to fetch the price details.
 	 *
 	 * @param productId The unique identifier of the product for which the price is being fetched.
-	 * @param quantity The quantity for which the price is being fetched.
+	 * @param d The quantity for which the price is being fetched.
 	 * @return The `ProductPrice` object containing the price details for the specified product and quantity.
 	 * @throws ServiceException If there is an error while retrieving the product price details.
 	 * @throws ValidationException If the input parameters are not valid.
 	 * @throws RuntimeException If the specified product does not exist.
 	 */
-	public ProductPrice findPriceByIdAndQuantity(int productId, int quantity)
+	public ProductPrice findPriceByIdAndQuantity(int productId, double d)
 			throws ServiceException, ValidationException {
 		try {
-			IntUtil.rejectIfInvalidInt(quantity);
+			IntUtil.rejectIfInvalidDouble(d);
 
 			boolean test = ProductDAO.productExists(productId);
 
@@ -337,7 +367,7 @@ public class ProductPriceService {
 
 			ProductPriceDAO productPriceDAO = new ProductPriceDAO();
 
-			ProductPrice price =  productPriceDAO.findPriceByIdAndQuantity(productId, quantity);
+			ProductPrice price =  productPriceDAO.findPriceByIdAndQuantity(productId, d);
 			
 			return price;
 		} catch (PersistanceException e) {

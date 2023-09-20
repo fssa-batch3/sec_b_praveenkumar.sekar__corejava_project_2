@@ -1,7 +1,11 @@
 package in.fssa.homebakery.model;
 
+import javax.validation.constraints.NotNull;
+
 public class CategoryEntity {
 	private int id;
+	
+	@NotNull(message = "category name cannot be null")
 	private String categoryName;
 	
 	public int getId() {

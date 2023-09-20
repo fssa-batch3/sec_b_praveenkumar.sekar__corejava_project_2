@@ -347,11 +347,10 @@ public class ProductDAO {
 		ResultSet rs = null;
 
 		try {
-			String query = "SELECT 1 FROM products WHERE id = ? AND is_active = ?";
+			String query = "SELECT 1 FROM products WHERE id = ? AND is_active = 1";
 			conn = ConnectionUtil.getConnection();
 			stmt = conn.prepareStatement(query);
 			stmt.setInt(1, productId);
-			stmt.setInt(2, 1);
 
 			rs = stmt.executeQuery();
 			if (rs.next()) {

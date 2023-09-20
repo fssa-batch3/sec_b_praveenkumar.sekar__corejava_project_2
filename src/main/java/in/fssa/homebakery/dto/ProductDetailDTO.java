@@ -13,6 +13,7 @@ public class ProductDetailDTO {
 	private boolean isVeg;
 	private boolean isActive;
 	private String imageUrl;
+	private List<ProductPrice> priceList;
 	
 
 	public String getImageUrl() {
@@ -23,7 +24,6 @@ public class ProductDetailDTO {
 		this.imageUrl = imageUrl;
 	}
 
-	private List<ProductPrice> priceList;
 
 	public int getId() {
 		return id;

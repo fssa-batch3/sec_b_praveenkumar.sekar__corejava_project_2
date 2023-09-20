@@ -248,6 +248,42 @@ public class UserDAO implements UserInterface {
 		return user;
 	}
 	
+	public User findByEmail(String email) throws PersistanceException {
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		User user = null;
+		ResultSet rs = null;
+
+		try {
+			String query = "SELECT id, first_name, last_name, email, phone_no, password FROM users WHERE is_active = 1 AND email = ?";
+			conn = ConnectionUtil.getConnection();
+			ps = conn.prepareStatement(query);
+
+			ps.setString(1, email);
+
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				user = new User();
+				user.setId(rs.getInt("id"));
+				user.setFirstName(rs.getString("first_name"));
+				user.setLastName(rs.getString("last_name"));
+				user.setEmail(rs.getString("email"));
+				user.setPhoneNo(rs.getLong("phone_no"));
+				user.setPassword(rs.getString("password"));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			throw new PersistanceException(e.getMessage());
+		} finally {
+			ConnectionUtil.close(conn, ps, rs);
+		}
+		return user;
+	}
+	
 	/**
 	 * Checks if a user with the provided user ID exists in the database.
 	 *
@@ -301,7 +337,7 @@ public class UserDAO implements UserInterface {
 	 * @throws PersistanceException If an SQL exception occurs while interacting with the database.
 	 * @throws RuntimeException If an error occurs during database interaction.
 	 */
-	public boolean isUserEmailPresent(String email) throws PersistanceException {
+	public static boolean isUserEmailPresent(String email) throws PersistanceException {
 	    Connection conn = null;
 	    PreparedStatement stmt = null;
 	    ResultSet rs = null;
