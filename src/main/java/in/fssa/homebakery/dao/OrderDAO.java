@@ -11,6 +11,7 @@ import java.util.List;
 
 import in.fssa.homebakery.dto.OrderDetailDTO;
 import in.fssa.homebakery.dto.OrderDetailDTO.OrderStatus;
+import in.fssa.homebakery.dto.ProductDetailDTO;
 import in.fssa.homebakery.exception.PersistanceException;
 import in.fssa.homebakery.model.Product;
 import in.fssa.homebakery.model.ProductPrice;
@@ -21,9 +22,11 @@ public class OrderDAO {
 	public void create(OrderDetailDTO order) throws PersistanceException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
+		Timestamp time = new Timestamp(System.currentTimeMillis());
+
 
 		try {
-	        String query = "INSERT INTO orders (user_id, product_id, price_id, quantity, address, delivery_date, delivery_time, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+	        String query = "INSERT INTO orders (user_id, product_id, price_id, quantity, address, delivery_date, delivery_time, status, ordered_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	        conn = ConnectionUtil.getConnection();
 	        stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -36,7 +39,8 @@ public class OrderDAO {
 	        stmt.setTimestamp(6, deliveryDate);
 	        Time deliveryTime = new Time(order.getDeliveryTime().getTime());
 	        stmt.setTime(7, deliveryTime);
-	        stmt.setString(8, order.getStatus().toString()); // Assuming status is an enum
+	        stmt.setString(8, order.getStatus().toString().toUpperCase()); 
+	        stmt.setTimestamp(9, time);
 
 	        stmt.executeUpdate();
 
@@ -62,9 +66,10 @@ public class OrderDAO {
 	public void update(int orderId, OrderDetailDTO order) throws PersistanceException {
 	    Connection conn = null;
 	    PreparedStatement stmt = null;
-
+	    Timestamp time = new Timestamp(System.currentTimeMillis());
+	    
 	    try {
-	        String query = "UPDATE orders SET user_id = ?, product_id = ?, price_id = ?, quantity = ?, address = ?, delivery_date = ?, delivery_time = ?, status = ? WHERE id = ?";
+	        String query = "UPDATE orders SET user_id = ?, product_id = ?, price_id = ?, quantity = ?, address = ?, delivery_date = ?, delivery_time = ?, status = ?, ordered_time = ? WHERE id = ?";
 	        conn = ConnectionUtil.getConnection();
 	        stmt = conn.prepareStatement(query);
 
@@ -79,7 +84,8 @@ public class OrderDAO {
 	        stmt.setTime(7, deliveryTime);
 
 	        stmt.setString(8, order.getStatus().toString());
-	        stmt.setInt(9, orderId);
+	        stmt.setTimestamp(9, time);
+	        stmt.setInt(10, orderId);
 
 	        int rowsUpdated = stmt.executeUpdate();
 
@@ -133,7 +139,7 @@ public class OrderDAO {
 	    List<OrderDetailDTO> orders = new ArrayList<>();
 
 	    try {
-	        String query = "SELECT id, address, status, quantity, product_id, price_id, delivery_date, delivary_time  FROM orders WHERE user_id = ?";
+	        String query = "SELECT id, address, status, quantity, product_id, price_id, delivery_date, delivery_time, ordered_time  FROM orders WHERE user_id = ?";
 	        conn = ConnectionUtil.getConnection();
 	        ps = conn.prepareStatement(query);
 	        ps.setInt(1, userId);
@@ -142,7 +148,7 @@ public class OrderDAO {
 
 	        while (rs.next()) {
 	            OrderDetailDTO order = new OrderDetailDTO();
-	            Product product = new Product();
+	            ProductDetailDTO product = new ProductDetailDTO();
 	            ProductPrice productPrice = new ProductPrice();
 	            order.setId(rs.getInt("id"));
 	            order.setAddress(rs.getString("address"));
@@ -152,8 +158,11 @@ public class OrderDAO {
 	            order.setQuantity(rs.getInt("quantity"));
 	            order.setDeliveryDate(rs.getTimestamp("delivery_date"));
 	            order.setDeliveryTime(rs.getTime("delivery_time"));
-
+	            order.setOrderedTime(rs.getTimestamp("ordered_time"));
+	            order.setProduct(product);
+	            order.setProductPrice(productPrice);
 	            orders.add(order);
+	            
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
@@ -165,6 +174,47 @@ public class OrderDAO {
 	    
 	    return orders;
 	}
+	
+	public OrderDetailDTO findOrdersByOrderId(int orderId) throws PersistanceException {
+		Connection conn = null;
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+	    OrderDetailDTO order = new OrderDetailDTO();
+
+	    try {
+	        String query = "SELECT id, address, status, quantity, product_id, price_id, delivery_date, delivery_time, ordered_time  FROM orders WHERE id = ?";
+	        conn = ConnectionUtil.getConnection();
+	        ps = conn.prepareStatement(query);
+	        ps.setInt(1, orderId);
+
+	        rs = ps.executeQuery();
+
+	        if (rs.next()) {
+	            ProductDetailDTO product = new ProductDetailDTO();
+	            ProductPrice productPrice = new ProductPrice();
+	            order.setId(rs.getInt("id"));
+	            order.setAddress(rs.getString("address"));
+	            product.setId(rs.getInt("product_id"));
+	            productPrice.setId(rs.getInt("price_id"));
+	            order.setStatus(OrderDetailDTO.OrderStatus.valueOf(rs.getString("status")));
+	            order.setQuantity(rs.getInt("quantity"));
+	            order.setDeliveryDate(rs.getTimestamp("delivery_date"));
+	            order.setDeliveryTime(rs.getTime("delivery_time"));
+	            order.setOrderedTime(rs.getTimestamp("ordered_time"));
+	            order.setProduct(product);
+	            order.setProductPrice(productPrice);
+	            
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println(e.getMessage());
+	        throw new PersistanceException(e.getMessage());
+	    } finally {
+	        ConnectionUtil.close(conn, ps, rs);
+	    }
+	    
+	    return order;
+	}
 
 	public List<OrderDetailDTO> findAllOrders() throws PersistanceException {
 		Connection conn = null;
@@ -173,7 +223,7 @@ public class OrderDAO {
 	    List<OrderDetailDTO> orders = new ArrayList<>();
 
 	    try {
-	        String query = "SELECT id, address, status, quantity, product_id, price_id, delivery_date, delivary_time FROM orders";
+	        String query = "SELECT id, address, status, quantity, product_id, price_id, delivery_date, delivery_time, ordered_time FROM orders";
 	        conn = ConnectionUtil.getConnection();
 	        ps = conn.prepareStatement(query);
 
@@ -191,6 +241,7 @@ public class OrderDAO {
 	            order.setQuantity(rs.getInt("quantity"));
 	            order.setDeliveryDate(rs.getTimestamp("delivery_date"));
 	            order.setDeliveryTime(rs.getTime("delivery_time"));
+	            order.setOrderedTime(rs.getTimestamp("ordered_time"));
 
 	            orders.add(order);
 	        }

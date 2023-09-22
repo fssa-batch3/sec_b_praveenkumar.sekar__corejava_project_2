@@ -22,6 +22,15 @@ public class OrderDetailDTO {
 	private ProductPrice productPrice;
 	private Date deliveryDate;
 	private Time deliveryTime;
+	private Timestamp orderedTime;
+
+	public Timestamp getOrderedTime() {
+		return orderedTime;
+	}
+
+	public void setOrderedTime(Timestamp orderedTime) {
+		this.orderedTime = orderedTime;
+	}
 
 	public int getId() {
 		return id;
