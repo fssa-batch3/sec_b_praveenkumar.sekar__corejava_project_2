@@ -16,6 +16,7 @@ import in.fssa.homebakery.exception.PersistanceException;
 import in.fssa.homebakery.interfaces.UserInterface;
 import in.fssa.homebakery.model.User;
 import in.fssa.homebakery.util.ConnectionUtil;
+import in.fssa.homebakery.util.PasswordEncryptor;
 
 public class UserDAO implements UserInterface {
 
@@ -48,8 +49,8 @@ public class UserDAO implements UserInterface {
 			ps.setString(1, newUser.getFirstName());
 			ps.setString(2, newUser.getLastName());
 			ps.setString(3, newUser.getEmail());
-			ps.setString(4, newUser.getPassword());
-			ps.setLong(5, newUser.getPhoneNo());
+			ps.setString(4, PasswordEncryptor.encrypt(newUser.getPassword(), System.getenv("SECRET_KEY")));
+			ps.setLong(5, newUser.getPhoneNo()); 
 			ps.executeUpdate();
 
 			System.out.println("User has been successfully created");
@@ -57,6 +58,8 @@ public class UserDAO implements UserInterface {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
 			throw new PersistanceException(e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			ConnectionUtil.close(conn, ps);
 		}
@@ -276,13 +279,16 @@ public class UserDAO implements UserInterface {
 				user.setLastName(rs.getString("last_name"));
 				user.setEmail(rs.getString("email"));
 				user.setPhoneNo(rs.getLong("phone_no"));
-				user.setPassword(rs.getString("password"));
+				user.setPassword(PasswordEncryptor.decrypt(rs.getString("password"), System.getenv("SECRET_KEY")));
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
 			throw new PersistanceException(e.getMessage());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} finally {
 			ConnectionUtil.close(conn, ps, rs);
 		}
