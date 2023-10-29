@@ -52,8 +52,7 @@ public class UserDAO implements UserInterface {
 			ps.setString(4, PasswordEncryptor.encrypt(newUser.getPassword(), System.getenv("SECRET_KEY")));
 			ps.setLong(5, newUser.getPhoneNo()); 
 			ps.executeUpdate();
-
-			System.out.println("User has been successfully created");
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
@@ -96,16 +95,17 @@ public class UserDAO implements UserInterface {
 			ps.setString(1, updatedUser.getFirstName());
 			ps.setString(2, updatedUser.getLastName());
 			ps.setLong(3, updatedUser.getPhoneNo());
-			ps.setString(4, updatedUser.getPassword());
+			ps.setString(4, PasswordEncryptor.encrypt(updatedUser.getPassword(), System.getenv("SECRET_KEY")));
 			ps.setString(5, updatedUser.getEmail());
 			ps.setInt(6, id);
 			ps.executeUpdate();
-
-			System.out.println("User has been successfully updated");
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
 			throw new PersistanceException(e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			ConnectionUtil.close(conn, ps);
 		}
@@ -140,8 +140,7 @@ public class UserDAO implements UserInterface {
 			ps.setInt(1, 0);
 			ps.setInt(2, userId);
 			ps.executeUpdate();
-
-			System.out.println("User has been successfully deactivated");
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
@@ -214,10 +213,10 @@ public class UserDAO implements UserInterface {
 	 * @param userId The ID of the user to be retrieved.
 	 * @return A 'User' object representing the details of the retrieved user entry.
 	 *         If no matching active entry is found, null is returned.
+	 * @throws PersistanceException 
 	 * @throws RuntimeException If an error occurs during the database retrieval
 	 *                          process. The original exception is printed, and a
 	 *                          RuntimeException is thrown.
-	 * @throws PersistanceException 
 	 */
 	@Override
 	public User findById(int userId) throws PersistanceException {
@@ -243,13 +242,15 @@ public class UserDAO implements UserInterface {
 				user.setLastName(rs.getString("last_name"));
 				user.setEmail(rs.getString("email"));
 				user.setPhoneNo(rs.getLong("phone_no"));
-				user.setPassword(rs.getString("password"));
+				user.setPassword(PasswordEncryptor.decrypt(rs.getString("password"), System.getenv("SECRET_KEY")));
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
 			throw new PersistanceException(e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			ConnectionUtil.close(conn, ps, rs);
 		}
@@ -287,7 +288,6 @@ public class UserDAO implements UserInterface {
 			System.out.println(e.getMessage());
 			throw new PersistanceException(e.getMessage());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			ConnectionUtil.close(conn, ps, rs);

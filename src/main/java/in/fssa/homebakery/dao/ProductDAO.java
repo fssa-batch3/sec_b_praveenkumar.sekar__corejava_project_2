@@ -55,8 +55,6 @@ public class ProductDAO {
 
 			stmt.executeUpdate();
 
-			System.out.println("Product with ID " + id + " has been successfully updated");
-
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			throw new PersistanceException(e.getMessage());
@@ -126,7 +124,7 @@ public class ProductDAO {
 	public Set<ProductDetailDTO> findAll() throws PersistanceException {
 		Connection conn = null;
 		PreparedStatement ps = null;
-		Set<ProductDetailDTO> setOfUser = new HashSet<>();
+		Set<ProductDetailDTO> setOfProducts = new HashSet<>();
 		ResultSet rs = null;
 
 		try {
@@ -143,7 +141,7 @@ public class ProductDAO {
 				product.setCategoryId(rs.getInt("category_id"));
 				product.setImageUrl(rs.getString("image_url"));
 				product.setVeg(rs.getBoolean("is_veg"));
-				setOfUser.add(product);
+				setOfProducts.add(product);
 			}
 
 		} catch (SQLException e) {
@@ -153,7 +151,7 @@ public class ProductDAO {
 		} finally {
 			ConnectionUtil.close(conn, ps, rs);
 		}
-		return setOfUser;
+		return setOfProducts;
 	}
 
 	/**
@@ -308,8 +306,6 @@ public class ProductDAO {
 			stmt.setBoolean(6, productDetailDTO.isActive());
 			stmt.executeUpdate();
 
-			System.out.println("Product has been successfully created");
-
 			ResultSet generatedKeys = stmt.getGeneratedKeys();
 			if (generatedKeys.next()) {
 				productId = generatedKeys.getInt(1);
@@ -365,6 +361,247 @@ public class ProductDAO {
 		} finally {
 			ConnectionUtil.close(conn, stmt, rs);
 		}
+	}
+	
+	/**
+	 * Retrieves all active products from the database along with their details.
+	 *
+	 * This method queries the database to retrieve all products that are currently
+	 * active, based on the 'is_active' status in the 'products' table. For each
+	 * active product, a 'ProductDetailDTO' object is created, populated with the
+	 * retrieved data, and added to a 'Set'. The set is then returned, containing
+	 * all active products' details. If any database-related exception occurs during
+	 * the process, it is caught, and a RuntimeException is thrown.
+	 *
+	 * @return A 'Set' containing 'ProductDetailDTO' objects representing details of
+	 *         all active products.
+	 * @throws PersistanceException 
+	 * @throws RuntimeException If an error occurs during the database retrieval
+	 *                          process. The original exception is printed, and a
+	 *                          RuntimeException is thrown.
+	 */
+	public Set<ProductDetailDTO> findSetsOfProducts(int n) throws PersistanceException {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		Set<ProductDetailDTO> setOfProducts = new HashSet<>();
+		ResultSet rs = null;
+
+		try {
+			String query = "SELECT id, product_name, description, category_id, image_url, is_veg FROM products WHERE is_active = 1 LIMIT 5 OFFSET ?";
+			conn = ConnectionUtil.getConnection();
+			ps = conn.prepareStatement(query);
+			ps.setInt(1,n);
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				ProductDetailDTO product = new ProductDetailDTO();
+				product.setId(rs.getInt("id"));
+				product.setName(rs.getString("product_name"));
+				product.setDescription(rs.getString("description"));
+				product.setCategoryId(rs.getInt("category_id"));
+				product.setImageUrl(rs.getString("image_url"));
+				product.setVeg(rs.getBoolean("is_veg"));
+				setOfProducts.add(product);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			throw new PersistanceException(e.getMessage());
+		} finally {
+			ConnectionUtil.close(conn, ps, rs);
+		}
+		return setOfProducts;
+	}
+	
+	/**
+	 * Retrieves all active products from the database along with their details.
+	 *
+	 * This method queries the database to retrieve all products that are currently
+	 * active, based on the 'is_active' status in the 'products' table. For each
+	 * active product, a 'ProductDetailDTO' object is created, populated with the
+	 * retrieved data, and added to a 'Set'. The set is then returned, containing
+	 * all active products' details. If any database-related exception occurs during
+	 * the process, it is caught, and a RuntimeException is thrown.
+	 *
+	 * @return A 'Set' containing 'ProductDetailDTO' objects representing details of
+	 *         all active products.
+	 * @throws PersistanceException 
+	 * @throws RuntimeException If an error occurs during the database retrieval
+	 *                          process. The original exception is printed, and a
+	 *                          RuntimeException is thrown.
+	 */
+	public Set<ProductDetailDTO> findSetsOfProductsOrderByPrice(int n, String sort) throws PersistanceException {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		Set<ProductDetailDTO> setOfProducts = new HashSet<>();
+		ResultSet rs = null;
+
+		try {
+			String query = "SELECT id, product_name, description, category_id, image_url, is_veg FROM products WHERE is_active = 1 LIMIT 5 OFFSET ?";
+			conn = ConnectionUtil.getConnection();
+			ps = conn.prepareStatement(query);
+			ps.setInt(1,n);
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				ProductDetailDTO product = new ProductDetailDTO();
+				product.setId(rs.getInt("id"));
+				product.setName(rs.getString("product_name"));
+				product.setDescription(rs.getString("description"));
+				product.setCategoryId(rs.getInt("category_id"));
+				product.setImageUrl(rs.getString("image_url"));
+				product.setVeg(rs.getBoolean("is_veg"));
+				setOfProducts.add(product);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			throw new PersistanceException(e.getMessage());
+		} finally {
+			ConnectionUtil.close(conn, ps, rs);
+		}
+		return setOfProducts;
+	}
+	
+	/**
+	 * Retrieves a list of active products from the database based on a specific
+	 * category ID along with their details.
+	 *
+	 * This method queries the database to retrieve all active products stored in
+	 * the 'products' table that belong to the specified category ID and are marked
+	 * as active (based on 'is_active' status). The retrieved product data is used
+	 * to create a list of 'Product' objects, which is then returned. If no matching
+	 * active products are found for the given category ID, an empty list is
+	 * returned. If any database-related exception occurs during the process, it is
+	 * caught, and a RuntimeException is thrown.
+	 *
+	 * @param categoryId The ID of the category for which to retrieve active
+	 *                   products.
+	 * @return A list of 'Product' objects containing the data of the retrieved
+	 *         active products for the specified category. Returns an empty list if
+	 *         no matching active products are found.
+	 * @throws PersistanceException 
+	 * @throws RuntimeException If an error occurs during the database retrieval
+	 *                          process. The original exception is printed, and a
+	 *                          RuntimeException is thrown.
+	 */
+	public List<ProductDetailDTO> findSetByCategoryId(int categoryId, int n) throws PersistanceException {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		List<ProductDetailDTO> productList = new ArrayList<>();
+		ResultSet rs = null;
+
+		try {
+			String query = "SELECT id, product_name, description, category_id, image_url, is_veg FROM products WHERE is_active = 1 AND category_id = ? LIMIT 5 OFFSET ?";
+			conn = ConnectionUtil.getConnection();
+			ps = conn.prepareStatement(query);
+
+			ps.setInt(1, categoryId);
+			ps.setInt(2, n);
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				ProductDetailDTO product = new ProductDetailDTO();
+				product.setId(rs.getInt("id"));
+				product.setName(rs.getString("product_name"));
+				product.setDescription(rs.getString("description"));
+				product.setCategoryId(rs.getInt("category_id"));
+				product.setImageUrl(rs.getString("image_url"));
+				product.setVeg(rs.getBoolean("is_veg"));
+				productList.add(product);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			throw new PersistanceException(e.getMessage());
+		} finally {
+			ConnectionUtil.close(conn, ps, rs);
+		}
+		return productList;
+	}
+
+	
+	/**
+	 * Retrieves the count of all active products from the database.
+	 *
+	 * This method queries the database to retrieve the count of all products that are
+	 * currently active, based on the 'is_active' status in the 'products' table.
+	 * If any database-related exception occurs during the process, it is caught,
+	 * and a RuntimeException is thrown.
+	 *
+	 * @return An integer representing the count of all active products.
+	 * @throws PersistanceException If an error occurs during the database retrieval
+	 *                              process. The original exception is printed, and a
+	 *                              PersistanceException is thrown.
+	 */
+	public int findCountOfActiveProducts() throws PersistanceException {
+	    Connection conn = null;
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+	    int count = 0;
+
+	    try {
+	        String query = "SELECT COUNT(*) AS product_count FROM products WHERE is_active = 1";
+	        conn = ConnectionUtil.getConnection();
+	        ps = conn.prepareStatement(query);
+	        rs = ps.executeQuery();
+
+	        if (rs.next()) {
+	            count = rs.getInt("product_count");
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println(e.getMessage());
+	        throw new PersistanceException(e.getMessage());
+	    } finally {
+	        ConnectionUtil.close(conn, ps, rs);
+	    }
+	    return count;
+	}
+	
+	/**
+	 * Retrieves the count of all active products from the database.
+	 *
+	 * This method queries the database to retrieve the count of all products that are
+	 * currently active, based on the 'is_active' status in the 'products' table.
+	 * If any database-related exception occurs during the process, it is caught,
+	 * and a RuntimeException is thrown.
+	 *
+	 * @return An integer representing the count of all active products.
+	 * @throws PersistanceException If an error occurs during the database retrieval
+	 *                              process. The original exception is printed, and a
+	 *                              PersistanceException is thrown.
+	 */
+	public int findCountOfActiveProductsByCategoryId(int id) throws PersistanceException {
+	    Connection conn = null;
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+	    int count = 0;
+
+	    try {
+	        String query = "SELECT COUNT(*) AS product_count FROM products WHERE is_active = 1 AND category_id = ?";
+	        conn = ConnectionUtil.getConnection();
+	        ps = conn.prepareStatement(query);
+	        ps.setInt(1 ,id);
+	        rs = ps.executeQuery();
+
+	        if (rs.next()) {
+	            count = rs.getInt("product_count");
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println(e.getMessage());
+	        throw new PersistanceException(e.getMessage());
+	    } finally {
+	        ConnectionUtil.close(conn, ps, rs);
+	    }
+	    return count;
 	}
 
 }

@@ -136,6 +136,41 @@ public class ProductService {
 	}
 	
 	/**
+	 * Retrieves a set of all products along with their associated product prices.
+	 *
+	 * This method uses a 'ProductDAO' instance to retrieve a set of all products
+	 * from the database by invoking the 'findAll' method. For each retrieved
+	 * 'ProductDetailDTO' in the set, the method uses a 'ProductPriceDAO' instance
+	 * to retrieve the associated product prices using the 'findByProductId' method,
+	 * and then sets the retrieved prices using 'setPrices' on the product.
+	 * 
+	 * The method prints each product along with its associated prices to the
+	 * console and returns the set of retrieved products.
+	 *
+	 * @return A set containing 'ProductDetailDTO' objects, each representing a
+	 *         product along with its associated product prices.
+	 * @throws ValidationException 
+	 * @throws PersistanceException 
+	 */
+	public Set<ProductDetailDTO> getSetOfProducts(int n) throws ValidationException{
+
+		Set<ProductDetailDTO> productList;
+		try {
+			ProductDAO productDAO = new ProductDAO();
+			ProductPriceDAO productPriceDAO = new ProductPriceDAO();
+			productList = productDAO.findSetsOfProducts(n);
+			for (ProductDetailDTO product : productList) {
+				List<ProductPrice> prices = productPriceDAO.findByProductId(product.getId());
+				product.setPrices(prices);
+			}
+			return productList;
+		} catch (PersistanceException e) {
+			e.printStackTrace();
+			throw new ServiceException(e.getMessage());
+		}
+	}
+	
+	/**
 	 * Retrieves a product by its ID along with its associated product prices.
 	 *
 	 * This method uses a 'ProductDAO' instance to retrieve a product from the database by invoking the 'findById' method.
@@ -216,6 +251,46 @@ public class ProductService {
 	    
 	}
 	
+	/**
+	 * Retrieves a set of products by their category ID along with their associated product prices.
+	 *
+	 * This method uses a 'ProductDAO' instance to retrieve a set of products from the database by invoking the 'findByCategoryId' method.
+	 * For each retrieved 'ProductDetailDTO' in the set, the method uses a 'ProductPriceDAO' instance to retrieve the associated product
+	 * prices using the 'findByProductId' method, and then sets the retrieved prices using 'setPrices' on each product.
+	 *
+	 * The method prints each product along with its associated prices to the console and returns the set of retrieved products.
+	 *
+	 * @param categoryId The category ID for which products are to be retrieved.
+	 * @return A set containing 'ProductDetailDTO' objects, each representing a product of the specified category along with its
+	 *         associated product prices.
+	 * @throws ValidationException 
+	 * @throws PersistanceException 
+	 */
+	public List<ProductDetailDTO> getSetByCategoryId(int categoryId, int n) throws ValidationException, ServiceException {
+	    
+	    try {
+	    	ProductDAO productDAO = new ProductDAO();
+	    	ProductPriceDAO productPriceDAO = new ProductPriceDAO();
+			CategoryValidator.validateId(categoryId);
+			boolean test = CategoryDAO.categoryExists(categoryId);
+			
+			if (!test) {
+				throw new RuntimeException("Category does not exist");
+			}
+			
+			List<ProductDetailDTO> productList = productDAO.findSetByCategoryId(categoryId, n);
+			for (ProductDetailDTO product : productList) {
+				List<ProductPrice> prices = productPriceDAO.findCurrentPrice(product.getId());
+				product.setPrices(prices);
+			}
+			return productList;
+		} catch (PersistanceException e) {
+			e.printStackTrace();
+			throw new ServiceException(e.getMessage());
+		}
+	    
+	}
+	
 
 	/**
 	 * Updates the information of a product identified by its ID.
@@ -259,6 +334,46 @@ public class ProductService {
 			throw new ServiceException(e.getMessage());
 		}
 
+	}
+	
+	/**
+	 * Retrieves the count of all active products.
+	 *
+	 * This method uses a 'ProductDAO' instance to retrieve the count of all products
+	 * that are currently active in the database by invoking the 'findCountOfActiveProducts' method.
+	 * If any exception occurs during the process, it is caught, and a ServiceException is thrown.
+	 *
+	 * @return An integer representing the count of all active products.
+	 * @throws ServiceException If an error occurs during the service method execution.
+	 */
+	public int getCountOfActiveProducts() throws ServiceException {
+	    try {
+	        ProductDAO productDAO = new ProductDAO();
+	        return productDAO.findCountOfActiveProducts();
+	    } catch (PersistanceException e) {
+	        e.printStackTrace();
+	        throw new ServiceException(e.getMessage());
+	    }
+	}
+	
+	/**
+	 * Retrieves the count of all active products.
+	 *
+	 * This method uses a 'ProductDAO' instance to retrieve the count of all products
+	 * that are currently active in the database by invoking the 'findCountOfActiveProducts' method.
+	 * If any exception occurs during the process, it is caught, and a ServiceException is thrown.
+	 *
+	 * @return An integer representing the count of all active products.
+	 * @throws ServiceException If an error occurs during the service method execution.
+	 */
+	public int getCountOfActiveProductsByCategoryId(int id) throws ServiceException {
+	    try {
+	        ProductDAO productDAO = new ProductDAO();
+	        return productDAO.findCountOfActiveProductsByCategoryId(id);
+	    } catch (PersistanceException e) {
+	        e.printStackTrace();
+	        throw new ServiceException(e.getMessage());
+	    }
 	}
 
 }

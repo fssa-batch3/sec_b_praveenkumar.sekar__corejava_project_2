@@ -16,7 +16,6 @@ public class CategoryDAO implements CategoryInterface {
 
 	@Override
 	public void create(Category newT) {
-		System.out.println("Cannot create new category");
 	}
 
 	/**
@@ -47,8 +46,6 @@ public class CategoryDAO implements CategoryInterface {
 			ps.setString(1, updatedCategory.getCategoryName());
 			ps.setInt(2, id);
 			ps.executeUpdate();
-
-			System.out.println("Category has been successfully updated");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
@@ -69,7 +66,6 @@ public class CategoryDAO implements CategoryInterface {
 	 */
 	@Override
 	public void delete(int id) {
-		System.out.println("Cannot delete categories");
 	}
 
 	/**

@@ -54,8 +54,6 @@ public class ProductPriceDAO {
 			stmt.setTimestamp(5, newPrice.getStartDate());
 			stmt.executeUpdate();
 
-			System.out.println("Product prices have been successfully created");
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
@@ -105,8 +103,6 @@ public class ProductPriceDAO {
 			stmt.setTimestamp(5, time);
 			stmt.executeUpdate();
 
-			System.out.println("A new row has been inserted into product_prices");
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
@@ -131,13 +127,7 @@ public class ProductPriceDAO {
 
 	        // Execute the update
 	        int rowsUpdated = stmt.executeUpdate();
-
-	        if (rowsUpdated > 0) {
-	            System.out.println("Rows with null end_date have been updated for productId: " + priceId);
-	        } else {
-	            System.out.println("No matching rows found with productId: " + priceId
-	                    + " or all rows already have end_date set.");
-	        }
+	        
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	        System.out.println(e.getMessage());
@@ -181,16 +171,8 @@ public class ProductPriceDAO {
 			stmt.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
 			stmt.setInt(2, productId);
 			stmt.setDouble(3, quantity);
-
-			// Execute the update
-			int rowsUpdated = stmt.executeUpdate();
-
-			if (rowsUpdated > 0) {
-				System.out.println("End date has been set for productId: " + productId + ", quantity: " + quantity);
-			} else {
-				System.out.println("No matching rows found with productId: " + productId + ", quantity: " + quantity
-						+ " or end_date is already set.");
-			}
+			stmt.executeUpdate();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());

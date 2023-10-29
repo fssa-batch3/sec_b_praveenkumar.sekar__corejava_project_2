@@ -130,7 +130,6 @@ public class ProductPriceService {
 			ProductPriceDAO productPriceDAO = new ProductPriceDAO();
 			
 			productPriceDAO.delete(productPriceId);
-			System.out.println("Price has been deleted successfully");
 			
 			
 		} catch (PersistanceException e) {
@@ -158,9 +157,6 @@ public class ProductPriceService {
 		Set<ProductPrice> priceList = new HashSet<>();
 		try {
 			priceList = productPriceDAO.findAll();
-			for (ProductPrice price : priceList) {
-				System.out.println(price);
-			}
 		} catch (PersistanceException e) {
 			e.printStackTrace();
 			throw new ServiceException(e.getMessage());
@@ -208,9 +204,6 @@ public class ProductPriceService {
 			ProductPriceDAO productPriceDAO = new ProductPriceDAO();
 
 			priceList = productPriceDAO.findByProductId(id);
-			for (ProductPrice price : priceList) {
-				System.out.println(price);
-			}
 		} catch (PersistanceException e) {
 			e.printStackTrace();
 			throw new ServiceException(e.getMessage());
@@ -285,9 +278,6 @@ public class ProductPriceService {
 			ProductPriceDAO productPriceDAO = new ProductPriceDAO();
 
 			List<ProductPrice> priceList = productPriceDAO.findCurrentPrice(productId);
-			for (ProductPrice price : priceList) {
-				System.out.println(price);
-			}
 			return priceList;
 		} catch (PersistanceException e) {
 			e.printStackTrace();
@@ -329,9 +319,6 @@ public class ProductPriceService {
 			ProductPriceDAO productPriceDAO = new ProductPriceDAO();
 
 			List<ProductPrice> priceList = productPriceDAO.findPricesByQuantity(quantity);
-			for (ProductPrice price : priceList) {
-				System.out.println(price);
-			}
 			return priceList;
 		} catch (PersistanceException e) {
 			e.printStackTrace();

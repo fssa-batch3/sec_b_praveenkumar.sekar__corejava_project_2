@@ -4,7 +4,7 @@ import java.util.List;
 
 import in.fssa.homebakery.model.ProductPrice;
 
-public class ProductDetailDTO {
+public class ProductDetailDTO implements Comparable<ProductDetailDTO>{
 
 	private int id;
 	private String name;
@@ -86,4 +86,9 @@ public class ProductDetailDTO {
 		return "ProductDetailDTO [id=" + id + ", name=" + name + ", description=" + description + ", categoryId="
 				+ categoryId + ", isVeg=" + isVeg + ", isActive=" + isActive + ", priceList=" + priceList + "]";
 	}
+	
+	@Override
+    public int compareTo(ProductDetailDTO prod) {
+        return Integer.compare(this.id, prod.getId());
+    }
 }

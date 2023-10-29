@@ -33,9 +33,6 @@ public class UserService {
 		Set<User> userList = new HashSet<>();
 		try {
 			userList = userDAO.findAll();
-			for (User user : userList) {
-				System.out.println(user);
-			}
 		} catch (PersistanceException e) {
 			e.printStackTrace();
 		}

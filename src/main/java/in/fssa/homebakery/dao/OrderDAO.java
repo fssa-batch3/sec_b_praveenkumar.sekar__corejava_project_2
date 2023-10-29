@@ -50,8 +50,6 @@ public class OrderDAO {
 	            order.setId(orderId); // Assuming setId exists in OrderDetailDTO to set the generated order ID
 	        }
 
-	        System.out.println("Order has been successfully created");
-
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	        System.out.println(e.getMessage());
@@ -89,12 +87,6 @@ public class OrderDAO {
 
 	        int rowsUpdated = stmt.executeUpdate();
 
-	        if (rowsUpdated > 0) {
-	            System.out.println("Order with ID " + orderId + " has been successfully updated");
-	        } else {
-	            System.out.println("No order with ID " + orderId + " found for update");
-	        }
-
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	        throw new PersistanceException(e.getMessage());
@@ -116,12 +108,6 @@ public class OrderDAO {
 		        stmt.setInt(2, orderId);
 
 		        int rowsUpdated = stmt.executeUpdate();
-
-		        if (rowsUpdated > 0) {
-		            System.out.println("Order with ID " + orderId + " has been successfully updated to status: " + newStatus);
-		        } else {
-		            System.out.println("No order with ID " + orderId + " found for status update");
-		        }
 
 		    } catch (SQLException e) {
 		        e.printStackTrace();
@@ -154,7 +140,7 @@ public class OrderDAO {
 	            order.setAddress(rs.getString("address"));
 	            product.setId(rs.getInt("product_id"));
 	            productPrice.setId(rs.getInt("price_id"));
-	            order.setStatus(OrderDetailDTO.OrderStatus.valueOf(rs.getString("status")));
+	            order.setStatus(OrderDetailDTO.OrderStatus.valueOf(rs.getString("status").toUpperCase()));
 	            order.setQuantity(rs.getInt("quantity"));
 	            order.setDeliveryDate(rs.getTimestamp("delivery_date"));
 	            order.setDeliveryTime(rs.getTime("delivery_time"));
@@ -196,7 +182,7 @@ public class OrderDAO {
 	            order.setAddress(rs.getString("address"));
 	            product.setId(rs.getInt("product_id"));
 	            productPrice.setId(rs.getInt("price_id"));
-	            order.setStatus(OrderDetailDTO.OrderStatus.valueOf(rs.getString("status")));
+	            order.setStatus(OrderDetailDTO.OrderStatus.valueOf(rs.getString("status").toUpperCase()));
 	            order.setQuantity(rs.getInt("quantity"));
 	            order.setDeliveryDate(rs.getTimestamp("delivery_date"));
 	            order.setDeliveryTime(rs.getTime("delivery_time"));
@@ -237,7 +223,7 @@ public class OrderDAO {
 	            order.setAddress(rs.getString("address"));
 	            product.setId(rs.getInt("product_id"));
 	            productPrice.setId(rs.getInt("price_id"));
-	            order.setStatus(OrderDetailDTO.OrderStatus.valueOf(rs.getString("status")));
+	            order.setStatus(OrderDetailDTO.OrderStatus.valueOf(rs.getString("status").toUpperCase()));
 	            order.setQuantity(rs.getInt("quantity"));
 	            order.setDeliveryDate(rs.getTimestamp("delivery_date"));
 	            order.setDeliveryTime(rs.getTime("delivery_time"));
