@@ -369,12 +369,51 @@ public class UserDAO implements UserInterface {
 	        return false;
 
 	    } catch (SQLException e) {
-	        System.out.println(e.getMessage());
 	        throw new PersistanceException(e.getMessage());
 	    } finally {
 	        ConnectionUtil.close(conn, stmt, rs);
 	    }
 	}
+	
+	/**
+	 * Checks if a user with the provided phone number exists in the database.
+	 *
+	 * This method determines whether a user with the given phone number exists in the
+	 * database. It queries the database and returns a boolean value indicating the
+	 * presence of the user.
+	 *
+	 * @param phoneNo The phone number of the user to be checked.
+	 * @return {@code true} if the user with the provided phone number exists in the database, {@code false} otherwise.
+	 * @throws PersistanceException If an SQL exception occurs while interacting with the database.
+	 * @throws RuntimeException If an error occurs during database interaction.
+	 */
+	public static boolean isUserPhoneNoPresent(long phoneNo) throws PersistanceException {
+	    Connection conn = null;
+	    PreparedStatement stmt = null;
+	    ResultSet rs = null;
+
+	    try {
+	        conn = ConnectionUtil.getConnection();
+	        String query = "SELECT COUNT(*) FROM users WHERE phone_no = ?";
+	        stmt = conn.prepareStatement(query);
+	        stmt.setLong(1, phoneNo);
+
+	        rs = stmt.executeQuery();
+
+	        if (rs.next()) {
+	            int count = rs.getInt(1);
+	            return count > 0;
+	        }
+
+	        return false;
+
+	    } catch (SQLException e) {
+	        throw new PersistanceException(e.getMessage());
+	    } finally {
+	        ConnectionUtil.close(conn, stmt, rs);
+	    }
+	}
+	
 	
 	public static String encrypt(String plainText, String secretKey) throws Exception {
 	    // Generate a secret key from the provided string

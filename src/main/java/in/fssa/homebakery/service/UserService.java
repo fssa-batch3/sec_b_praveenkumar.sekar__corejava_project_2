@@ -60,8 +60,15 @@ public class UserService {
 			if(check) {
 				throw new RuntimeException("An account with the email already exists");
 			}
+			
+			boolean check2 = userDAO.isUserPhoneNoPresent(newUser.getPhoneNo());
+			
+			if(check2) {
+				throw new RuntimeException("An account with the phone already exists");
+			}
+			
 			userDAO.create(newUser);
-		} catch (PersistanceException e) {
+		} catch (PersistanceException | RuntimeException e) {
 			e.printStackTrace();
 			throw new ServiceException(e.getMessage());
 		}
@@ -176,7 +183,7 @@ public class UserService {
 			boolean check = UserDAO.isUserEmailPresent(email);
 			
 			if (!check) {
-				throw new RuntimeException("User does not exist");
+				throw new ValidationException("User does not exist");
 			}
 			
 			UserDAO userDAO = new UserDAO();
